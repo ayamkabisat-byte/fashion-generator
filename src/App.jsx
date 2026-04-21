@@ -16,16 +16,16 @@ function hslToHex(h, s, l) {
 const generateSensiblePalette = () => {
   const baseHue = Math.floor(Math.random() * 360);
   const isDark = Math.random() > 0.5;
-  const baseL = isDark ? 15 + Math.random() * 20 : 75 + Math.random() * 15; 
-  const baseS = 30 + Math.random() * 50; 
+  const baseL = isDark ? 15 + Math.random() * 20 : 75 + Math.random() * 15;
+  const baseS = 30 + Math.random() * 50;
   const color1 = hslToHex(baseHue, baseS, baseL);
   const secHue = (baseHue + (Math.random() > 0.5 ? 30 : -30) + 360) % 360;
-  const secS = 10 + Math.random() * 20; 
-  const secL = isDark ? 65 + Math.random() * 20 : 25 + Math.random() * 20; 
+  const secS = 10 + Math.random() * 20;
+  const secL = isDark ? 65 + Math.random() * 20 : 25 + Math.random() * 20;
   const color2 = hslToHex(secHue, secS, secL);
-  const accentHue = (baseHue + 180 + (Math.random() * 40 - 20)) % 360; 
-  const accentS = 70 + Math.random() * 30; 
-  const accentL = 45 + Math.random() * 15; 
+  const accentHue = (baseHue + 180 + (Math.random() * 40 - 20)) % 360;
+  const accentS = 70 + Math.random() * 30;
+  const accentL = 45 + Math.random() * 15;
   const color3 = hslToHex(accentHue, accentS, accentL);
   return [color1, color2, color3];
 };
@@ -134,17 +134,17 @@ const GLOBAL_PATTERNS = {
 };
 
 const BRAND_COLOR_DNA = {
-  'Versace': ['#000000', '#D4AF37', '#FFFFFF'], 'Yeezy': ['#C2B280', '#556B2F', '#8B4513'], 'Off-White': ['#FFFFFF', '#000000', '#FFD700'], 
-  'Supreme': ['#DA291C', '#FFFFFF', '#000000'], 'Mastermind Japan': ['#000000', '#FFFFFF', '#404040'], 'Balenciaga': ['#000000', '#39FF14', '#C0C0C0'], 
-  'Gucci': ['#175E36', '#B22222', '#D4AF37'], 'Louis Vuitton': ['#5C4033', '#C2B280', '#D4AF37'], 'Dior': ['#B0C4DE', '#808080', '#FFFFFF'], 
-  'Prada': ['#000000', '#FFFFFF', '#FF0000'], 'Adidas': ['#000000', '#FFFFFF', '#0047AB'], 'Nike': ['#FF6600', '#000000', '#FFFFFF'], 
-  'Puma': ['#000000', '#FFFFFF', '#DA291C'], 'New Balance': ['#808080', '#C0C0C0', '#000000'], 'Reebok': ['#FFFFFF', '#000000', '#E21A2C'], 'Asics': ['#000000', '#FFFFFF', '#00529B'], 'Under Armour': ['#000000', '#808080', '#FF0000'], 'Salomon': ['#8B4513', '#A9A9A9', '#2F4F4F'], 
+  'Versace': ['#000000', '#D4AF37', '#FFFFFF'], 'Yeezy': ['#C2B280', '#556B2F', '#8B4513'], 'Off-White': ['#FFFFFF', '#000000', '#FFD700'],
+  'Supreme': ['#DA291C', '#FFFFFF', '#000000'], 'Mastermind Japan': ['#000000', '#FFFFFF', '#404040'], 'Balenciaga': ['#000000', '#39FF14', '#C0C0C0'],
+  'Gucci': ['#175E36', '#B22222', '#D4AF37'], 'Louis Vuitton': ['#5C4033', '#C2B280', '#D4AF37'], 'Dior': ['#B0C4DE', '#808080', '#FFFFFF'],
+  'Prada': ['#000000', '#FFFFFF', '#FF0000'], 'Adidas': ['#000000', '#FFFFFF', '#0047AB'], 'Nike': ['#FF6600', '#000000', '#FFFFFF'],
+  'Puma': ['#000000', '#FFFFFF', '#DA291C'], 'New Balance': ['#808080', '#C0C0C0', '#000000'], 'Reebok': ['#FFFFFF', '#000000', '#E21A2C'], 'Asics': ['#000000', '#FFFFFF', '#00529B'], 'Under Armour': ['#000000', '#808080', '#FF0000'], 'Salomon': ['#8B4513', '#A9A9A9', '#2F4F4F'],
   'Stussy': ['#000000', '#FFFFFF', '#FF69B4'], 'BAPE': ['#556B2F', '#8B4513', '#FFFF00'], 'Fear of God': ['#F5F5DC', '#808080', '#000000'], 'Converse': ['#FFFFFF', '#000000', '#FF0000'], 'Vans': ['#000000', '#FFFFFF', '#FF0000'], 'Dr. Martens': ['#000000', '#FFC000', '#8B0000'], 'Air Jordan': ['#CE1141', '#000000', '#FFFFFF'], 'Crocs': ['#000000', '#808080', '#FFFFFF'],
   'Compass': ['#F5F5DC', '#000000', '#C19A6B'], 'Brodo': ['#8B4513', '#000000', '#FFFFFF'], 'Ventela': ['#000000', '#FFFFFF', '#FFD700'], 'Piero': ['#000000', '#FFFFFF', '#FF0000']
 };
 
 const ARTIST_COLOR_DNA = {
-  "Takashi Murakami": ['#FF69B4', '#00FFFF', '#FFFF00'], "KAWS": ['#808080', '#000000', '#FF007F'], "Travis Scott": ['#624C3C', '#F8CCDF', '#E51C2B'], 
+  "Takashi Murakami": ['#FF69B4', '#00FFFF', '#FFFF00'], "KAWS": ['#808080', '#000000', '#FF007F'], "Travis Scott": ['#624C3C', '#F8CCDF', '#E51C2B'],
   "Virgil Abloh": ['#FFFFFF', '#000000', '#FF4500'], "Michael Jordan": ['#CE1141', '#000000', '#FFFFFF'], "Kanye West": ['#8B8682', '#4A4A4A', '#000000']
 };
 
@@ -200,7 +200,7 @@ const AESTHETIC_THEMES = {
 
 const ALL_MATS = ['Cotton / Canvas', 'Fleece / Terry', 'Heavy Drill', 'Denim', 'Corduroy', 'Leather / Faux Leather', 'Silk / Satin', 'Knit / Crochet', 'Nylon / Parachute', 'Tech-Knit / Spandex', 'Lace / Sheer Mesh', 'Ballistic Nylon', 'Carbon Fiber / Kevlar', 'Suede', 'Rubber / TPU', 'Translucent TPU / Mesh'];
 const UNRESTRICTED_MATS = ALL_MATS;
-const SHEER_MATS = ['Lace / Sheer Mesh', 'Silk / Satin', 'Translucent TPU / Mesh']; 
+const SHEER_MATS = ['Lace / Sheer Mesh', 'Silk / Satin', 'Translucent TPU / Mesh'];
 const HARD_MATS = ['Leather / Faux Leather', 'Ballistic Nylon', 'Carbon Fiber / Kevlar', 'Suede', 'Rubber / TPU', 'Cotton / Canvas', 'Denim', 'Translucent TPU / Mesh'];
 const SPORT_MATS = ['Tech-Knit / Spandex', 'Nylon / Parachute', 'Rubber / TPU', 'Knit / Crochet', 'Translucent TPU / Mesh'];
 
@@ -376,10 +376,10 @@ const getGarmentsList = (pType, mCat, bName) => {
     if (mCat === 'Iconic Silhouette') {
       const brandIcons = ICONIC_DB[pType]?.[bName];
       if (brandIcons && brandIcons.length > 0) return brandIcons;
-      return [{ 
-        name: `${bName} Signature Silhouette`, 
-        traits: `Iconic and recognizable ${bName} design language and structural shape`, 
-        allowedMats: HARD_MATS 
+      return [{
+        name: `${bName} Signature Silhouette`,
+        traits: `Iconic and recognizable ${bName} design language and structural shape`,
+        allowedMats: HARD_MATS
       }];
     }
     return PRODUCTS[pType][mCat] || PRODUCTS[pType]["New Model (Generic)"];
@@ -406,7 +406,7 @@ const DESIGN_STYLES = {
 
 const BACKGROUND_STYLES = {
   "Auto (Match Aesthetic)": "AUTO",
-  "Clean Studio": "Clean seamless white studio background.", 
+  "Clean Studio": "Clean seamless white studio background.",
   "Urban / Street": "Urban city street background, dynamic neon lighting.",
   "White Sand Beach": "Beautiful white sand beach, clear blue sky, tropical aesthetic."
 };
@@ -414,48 +414,48 @@ const BACKGROUND_STYLES = {
 const GENDERS = ['Female', 'Female (with Hijab)', 'Female (Plus Size)', 'Male', 'Androgynous'];
 const ASPECT_RATIOS = {
   "16:9 (Desktop/Landscape)": { ratio: "--ar 16:9", layoutType: "triptych", productOnly: false },
-  "16:9 (Diptych - Product Only)": { ratio: "--ar 16:9", layoutType: "diptych-horizontal", productOnly: true }, 
+  "16:9 (Diptych - Product Only)": { ratio: "--ar 16:9", layoutType: "diptych-horizontal", productOnly: true },
   "9:16 (TikTok/Reels)": { ratio: "--ar 9:16", layoutType: "diptych-vertical", productOnly: false }
 };
 
 export default function App() {
   // --- STATE: PRODUCT SELECTION ---
-  const [productType, setProductType] = useState('Apparel'); 
+  const [productType, setProductType] = useState('Apparel');
   const [category, setCategory] = useState('Streetwear');
   const [brand, setBrand] = useState('Off-White');
   const [coBrandCat, setCoBrandCat] = useState('All');
-  const [coBrand, setCoBrand] = useState('None'); 
+  const [coBrand, setCoBrand] = useState('None');
   const [collabType, setCollabType] = useState('Artist');
-  const [collabArtist, setCollabArtist] = useState('None'); 
+  const [collabArtist, setCollabArtist] = useState('None');
   const [collabIP, setCollabIP] = useState('None');
   const [collabCharacter, setCollabCharacter] = useState('');
-  const [customIPText, setCustomIPText] = useState(''); 
+  const [customIPText, setCustomIPText] = useState('');
 
   const [menuCategory, setMenuCategory] = useState('Casual Wear');
   const [availableGarments, setAvailableGarments] = useState(getGarmentsList('Apparel', 'Casual Wear', 'Off-White'));
-  const [baseGarment, setBaseGarment] = useState(availableGarments[0]); 
-  const [customShapeText, setCustomShapeText] = useState(''); 
-  
-  const [materials, setMaterials] = useState(['Cotton / Canvas']); 
+  const [baseGarment, setBaseGarment] = useState(availableGarments[0]);
+  const [customShapeText, setCustomShapeText] = useState('');
+
+  const [materials, setMaterials] = useState(['Cotton / Canvas']);
   const [fitStyle, setFitStyle] = useState('Regular Fit');
   const [designComponent1, setDesignComponent1] = useState('None (Standard Cut)');
   const [designComponent2, setDesignComponent2] = useState('None (Standard Cut)');
-  const [designComponent3, setDesignComponent3] = useState('None (Standard Structure)'); 
-  
+  const [designComponent3, setDesignComponent3] = useState('None (Standard Structure)');
+
   const [selectedAesthetic, setSelectedAesthetic] = useState('None (Standard Fashion)');
   const [designStyle, setDesignStyle] = useState('Authentic & Ornate');
   const [selectedPattern, setSelectedPattern] = useState("Solid Color (No Pattern)");
   const [backgroundStyle, setBackgroundStyle] = useState('Auto (Match Aesthetic)');
-  
+
   const [gender, setGender] = useState('Female');
   const [aspectRatio, setAspectRatio] = useState("16:9 (Desktop/Landscape)");
-  const [layoutPos, setLayoutPos] = useState('Center'); 
+  const [layoutPos, setLayoutPos] = useState('Center');
   const [whiteLabel, setWhiteLabel] = useState(false);
   const [useUploadedDesign, setUseUploadedDesign] = useState(false);
-  const [strictFaceMode, setStrictFaceMode] = useState(false); // Cref Strict Mode
+  const [strictFaceMode, setStrictFaceMode] = useState(false);
 
   // --- STATE: COLORS (WITH INDIVIDUAL TOGGLES) ---
-  const [colorMode, setColorMode] = useState('Brand'); 
+  const [colorMode, setColorMode] = useState('Brand');
   const [colors, setColors] = useState(['#FFFFFF', '#000000', '#FF0000']);
   const [c1Active, setC1Active] = useState(true);
   const [c2Active, setC2Active] = useState(true);
@@ -486,14 +486,14 @@ export default function App() {
     const newMenus = getGarmentMenuCategories(type);
     const newMenuCat = type === 'Apparel' ? "Casual Wear" : "Iconic Silhouette";
     setMenuCategory(newMenuCat);
-    
+
     const newGarments = getGarmentsList(type, newMenuCat, brand);
     setAvailableGarments(newGarments);
     setBaseGarment(newGarments[0]);
-    
-    const validMaterials = materials.filter(m => newGarments[0].allowedMats.includes(m));
-    if (validMaterials.length === 0) setMaterials([newGarments[0].allowedMats[0]]);
-    else setMaterials(validMaterials);
+
+    // Reset materials based on new garment
+    const firstAllowed = newGarments[0]?.allowedMats?.[0] || ALL_MATS[0];
+    setMaterials([firstAllowed]);
   };
 
   const handleMenuCategoryChange = (mCat) => {
@@ -502,37 +502,35 @@ export default function App() {
     setAvailableGarments(newGarments);
     setBaseGarment(newGarments[0]);
     setCustomShapeText('');
-    
-    const validMaterials = materials.filter(m => newGarments[0].allowedMats.includes(m));
-    if (validMaterials.length === 0) setMaterials([newGarments[0].allowedMats[0]]);
-    else setMaterials(validMaterials);
+
+    const firstAllowed = newGarments[0]?.allowedMats?.[0] || ALL_MATS[0];
+    setMaterials([firstAllowed]);
   };
 
   const handleBrandChange = (bName) => {
     setBrand(bName);
     setSelectedPattern("Solid Color (No Pattern)");
     if (BRAND_COLOR_DNA[bName]) applyAutoColors(bName, coBrand);
-    
+
     if (productType !== 'Apparel' && menuCategory === 'Iconic Silhouette') {
       const newGarments = getGarmentsList(productType, 'Iconic Silhouette', bName);
       setAvailableGarments(newGarments);
       setBaseGarment(newGarments[0]);
       setCustomShapeText('');
-      
-      const validMaterials = materials.filter(m => newGarments[0].allowedMats.includes(m));
-      if (validMaterials.length === 0) setMaterials([newGarments[0].allowedMats[0]]);
-      else setMaterials(validMaterials);
+
+      const firstAllowed = newGarments[0]?.allowedMats?.[0] || ALL_MATS[0];
+      setMaterials([firstAllowed]);
     }
   };
 
   const handleGarmentChange = (gName) => {
     const selected = availableGarments.find(g => g.name === gName);
-    if(selected) {
-        setBaseGarment(selected);
-        setCustomShapeText('');
-        const validMaterials = materials.filter(m => selected.allowedMats.includes(m));
-        if (validMaterials.length === 0) setMaterials([selected.allowedMats[0]]);
-        else setMaterials(validMaterials);
+    if (selected) {
+      setBaseGarment(selected);
+      setCustomShapeText('');
+      const validMaterials = materials.filter(m => selected.allowedMats.includes(m));
+      if (validMaterials.length === 0) setMaterials([selected.allowedMats[0]]);
+      else setMaterials(validMaterials);
     }
   };
 
@@ -549,13 +547,13 @@ export default function App() {
     setColorMode('Auto');
     let bColor = BRAND_COLOR_DNA[currentBrand];
     let cbColor = currentCoBrand !== "None" ? BRAND_COLOR_DNA[currentCoBrand] : null;
-    
+
     if (collabType === 'Artist' && collabArtist !== "None") bColor = ARTIST_COLOR_DNA[collabArtist] || bColor;
     else if (collabType === 'IP' && collabCharacter !== "") bColor = IP_CHARACTER_COLOR_DNA[collabCharacter] || bColor;
 
     if (bColor) {
-        setColors([bColor[0], bColor[1] || '#FFFFFF', cbColor ? cbColor[0] : (bColor[2] || '#000000')]);
-        setC1Active(true); setC2Active(true); setC3Active(true);
+      setColors([bColor[0], bColor[1] || '#FFFFFF', cbColor ? cbColor[0] : (bColor[2] || '#000000')]);
+      setC1Active(true); setC2Active(true); setC3Active(true);
     }
   };
 
@@ -564,10 +562,9 @@ export default function App() {
     newColors[index] = value;
     setColors(newColors);
     setColorMode('Custom');
-    // Auto turn on if changed
-    if (index===0) setC1Active(true);
-    if (index===1) setC2Active(true);
-    if (index===2) setC3Active(true);
+    if (index === 0) setC1Active(true);
+    if (index === 1) setC2Active(true);
+    if (index === 2) setC3Active(true);
   };
 
   const applyRandomPalette = () => {
@@ -590,57 +587,56 @@ export default function App() {
     const randCat = cats[Math.floor(Math.random() * cats.length)];
     const brands = FASHION_CATEGORIES[randCat].brands;
     const randBrand = brands[Math.floor(Math.random() * brands.length)];
-    
+
     const randCoBrand = Math.random() > 0.8 ? ALL_BRANDS[Math.floor(Math.random() * ALL_BRANDS.length)] : "None";
-    
+
     const isIP = Math.random() > 0.5;
     setCollabType(isIP ? 'IP' : 'Artist');
-    let randArtist = "None"; 
+    let randArtist = "None";
     let randIP = "None";
     if (isIP) {
-        const ips = Object.keys(COLLAB_IPS).filter(k => k !== 'None' && k !== 'Custom IP (Type Manual)');
-        randIP = Math.random() > 0.5 ? ips[Math.floor(Math.random() * ips.length)] : "None";
-        setCollabIP(randIP);
-        if (randIP !== "None") setCollabCharacter(COLLAB_IPS[randIP][0]);
-        setCollabArtist("None");
-        setCustomIPText('');
+      const ips = Object.keys(COLLAB_IPS).filter(k => k !== 'None' && k !== 'Custom IP (Type Manual)');
+      randIP = Math.random() > 0.5 ? ips[Math.floor(Math.random() * ips.length)] : "None";
+      setCollabIP(randIP);
+      if (randIP !== "None") setCollabCharacter(COLLAB_IPS[randIP][0]);
+      setCollabArtist("None");
+      setCustomIPText('');
     } else {
-        const artists = Object.keys(COLLAB_ARTISTS).filter(k => k !== 'None');
-        randArtist = Math.random() > 0.6 ? artists[Math.floor(Math.random() * artists.length)] : "None"; 
-        setCollabArtist(randArtist);
-        setCollabIP("None");
+      const artists = Object.keys(COLLAB_ARTISTS).filter(k => k !== 'None');
+      randArtist = Math.random() > 0.6 ? artists[Math.floor(Math.random() * artists.length)] : "None";
+      setCollabArtist(randArtist);
+      setCollabIP("None");
     }
-    
+
     const menus = getGarmentMenuCategories(randType);
     const randMenu = menus[Math.floor(Math.random() * menus.length)];
     let items = getGarmentsList(randType, randMenu, randBrand);
     let finalGarment = items[Math.floor(Math.random() * items.length)];
-    
+
     const shuffledMats = [...(finalGarment.allowedMats || UNRESTRICTED_MATS)].sort(() => 0.5 - Math.random());
     const randMaterials = shuffledMats.slice(0, Math.floor(Math.random() * 3) + 1);
 
     const fits = DYNAMIC_FITS[randType];
     const randFit = fits[Math.floor(Math.random() * fits.length)];
-    
+
     const components = DESIGN_COMPONENTS[randType];
     const randComp1 = Math.random() > 0.4 ? components[Math.floor(Math.random() * components.length)] : components[0];
     const randComp2 = Math.random() > 0.6 && randComp1 !== components[0] ? components[Math.floor(Math.random() * components.length)] : components[0];
 
     const aesthetics = Object.keys(AESTHETIC_THEMES);
     const randAes = Math.random() > 0.3 ? aesthetics[Math.floor(Math.random() * aesthetics.length)] : "None (Standard Fashion)";
-    
-    setProductType(randType); setCategory(randCat); setBrand(randBrand); 
-    setCoBrandCat('All'); setCoBrand(randCoBrand); 
+
+    setProductType(randType); setCategory(randCat); setBrand(randBrand);
+    setCoBrandCat('All'); setCoBrand(randCoBrand);
     setGender(GENDERS[Math.floor(Math.random() * GENDERS.length)]);
     setMenuCategory(randMenu); setAvailableGarments(getGarmentsList(randType, randMenu, randBrand));
-    setBaseGarment(finalGarment); setMaterials(randMaterials); 
+    setBaseGarment(finalGarment); setMaterials(randMaterials);
     setFitStyle(randFit);
     setDesignComponent1(randComp1); setDesignComponent2(randComp2);
     setSelectedAesthetic(randAes); setDesignStyle(Object.keys(DESIGN_STYLES)[Math.floor(Math.random() * 3)]);
     setBackgroundStyle('Auto (Match Aesthetic)');
-    
-    // Randomize active colors
-    const activeCount = Math.floor(Math.random() * 3) + 1; // 1 to 3
+
+    const activeCount = Math.floor(Math.random() * 3) + 1;
     setC1Active(true);
     setC2Active(activeCount >= 2);
     setC3Active(activeCount === 3);
@@ -651,18 +647,18 @@ export default function App() {
   const generatePrompt = () => {
     const brandStyle = FASHION_CATEGORIES[category].description;
     const coBrandText = coBrand !== "None" ? ` x ${coBrand}` : '';
-    
+
     let collabText = "";
     let collabDetails = "";
     if (collabType === 'Artist' && collabArtist !== "None") {
-        collabText = ` x ${collabArtist.split(' ')[0]}`;
-        collabDetails = `Aesthetic Injection: ${COLLAB_ARTISTS[collabArtist]}.`;
+      collabText = ` x ${collabArtist.split(' ')[0]}`;
+      collabDetails = `Aesthetic Injection: ${COLLAB_ARTISTS[collabArtist]}.`;
     } else if (collabType === 'IP' && collabIP !== "None") {
-        const ipName = collabIP === "Custom IP (Type Manual)" ? customIPText : collabCharacter;
-        collabText = ` x ${ipName}`;
-        collabDetails = `Pop-Culture Injection: Heavily themed around ${ipName}, integrating iconic character colorways, motifs, and graphic elements into the design structure.`;
+      const ipName = collabIP === "Custom IP (Type Manual)" ? customIPText : collabCharacter;
+      collabText = ` x ${ipName}`;
+      collabDetails = `Pop-Culture Injection: Heavily themed around ${ipName}, integrating iconic character colorways, motifs, and graphic elements into the design structure.`;
     }
-    
+
     let materialText = "";
     if (materials.length === 1) materialText = `${materials[0]}`;
     else if (materials.length === 2) materialText = `a mixed-material paneling of ${materials[0]} and ${materials[1]}`;
@@ -676,23 +672,23 @@ export default function App() {
 
     let colorPrompt = "";
     if (activeColorsList.length === 1) {
-        colorPrompt = `Color Palette: Monochromatic styling focusing purely on ${activeColorsList[0]}.`;
+      colorPrompt = `Color Palette: Monochromatic styling focusing purely on ${activeColorsList[0]}.`;
     } else if (activeColorsList.length === 2) {
-        colorPrompt = `Color Palette: Two-tone styling featuring ${activeColorsList[0]} and ${activeColorsList[1]}.`;
+      colorPrompt = `Color Palette: Two-tone styling featuring ${activeColorsList[0]} and ${activeColorsList[1]}.`;
     } else if (activeColorsList.length === 3) {
-        colorPrompt = `Color Palette: Main base ${activeColorsList[0]}, Secondary ${activeColorsList[1]}, Accent ${activeColorsList[2]}.`;
+      colorPrompt = `Color Palette: Main base ${activeColorsList[0]}, Secondary ${activeColorsList[1]}, Accent ${activeColorsList[2]}.`;
     }
 
     let compList = [];
     if (designComponent1 && !designComponent1.includes("None")) compList.push(designComponent1.toLowerCase());
     if (designComponent2 && !designComponent2.includes("None") && designComponent2 !== designComponent1) compList.push(designComponent2.toLowerCase());
     if (productType === 'Footwear' && designComponent3 && !designComponent3.includes("None") && designComponent3 !== designComponent1 && designComponent3 !== designComponent2) compList.push(designComponent3.toLowerCase());
-    
+
     let componentText = compList.length > 0 ? ` Structurally modified with ${compList.join(' and ')} features.` : "";
 
     let patternText = "";
     if (selectedPattern !== "Solid Color (No Pattern)") {
-        patternText = ` Featuring prominent all-over ${selectedPattern} pattern adapted to the design.`;
+      patternText = ` Featuring prominent all-over ${selectedPattern} pattern adapted to the design.`;
     }
 
     const currentLayoutData = ASPECT_RATIOS[aspectRatio];
@@ -700,39 +696,39 @@ export default function App() {
 
     let garmentSilhouette = baseGarment.name;
     let garmentTraits = baseGarment.traits;
-    let accessoryTypeStr = "bag accessory"; 
+    let accessoryTypeStr = "bag accessory";
 
     if (productType === 'Accessories') {
-        if (baseGarment.name === "Custom Shape (Type Manual)" && customShapeText.trim() !== "") {
-             garmentSilhouette = customShapeText.trim();
-             garmentTraits = `avant-garde, literal and functional ${customShapeText.toLowerCase()} structural form`;
-             accessoryTypeStr = customShapeText.toLowerCase();
-        } else if (!baseGarment.name.toLowerCase().includes('bag') && !baseGarment.name.toLowerCase().includes('backpack') && !baseGarment.name.toLowerCase().includes('tote')) {
-             accessoryTypeStr = "accessory";
-        }
+      if (baseGarment.name === "Custom Shape (Type Manual)" && customShapeText.trim() !== "") {
+        garmentSilhouette = customShapeText.trim();
+        garmentTraits = `avant-garde, literal and functional ${customShapeText.toLowerCase()} structural form`;
+        accessoryTypeStr = customShapeText.toLowerCase();
+      } else if (!baseGarment.name.toLowerCase().includes('bag') && !baseGarment.name.toLowerCase().includes('backpack') && !baseGarment.name.toLowerCase().includes('tote')) {
+        accessoryTypeStr = "accessory";
+      }
     }
 
     // --- WHITE LABEL LOGIC ---
     let whiteLabelPrompt = "";
     if (whiteLabel) {
-        let antiBrandText = `(Remove ALL ${brand} insignias)`;
-        if (coBrand !== "None") antiBrandText = `(Remove ALL ${brand} and ${coBrand} insignias)`;
-        whiteLabelPrompt = `CRITICAL INSTRUCTION: NO BRAND LOGOS, NO TEXT, NO GRAPHIC TYPOGRAPHY. Keep the design completely unbranded (white-label). Replicate the silhouette and vibe ONLY, strip all visible trademarks or logos ${antiBrandText}.`;
+      let antiBrandText = `(Remove ALL ${brand} insignias)`;
+      if (coBrand !== "None") antiBrandText = `(Remove ALL ${brand} and ${coBrand} insignias)`;
+      whiteLabelPrompt = `CRITICAL INSTRUCTION: NO BRAND LOGOS, NO TEXT, NO GRAPHIC TYPOGRAPHY. Keep the design completely unbranded (white-label). Replicate the silhouette and vibe ONLY, strip all visible trademarks or logos ${antiBrandText}.`;
     } else {
-        whiteLabelPrompt = `Feature signature branding prominently.`;
+      whiteLabelPrompt = `Feature signature branding prominently.`;
     }
 
     let negativePrompt = "--no floating text, watermarks, captions, borders, UI elements";
     if (whiteLabel) {
-        negativePrompt += `, clothing typography, brand logos, graphic text, ${brand} logo`;
-        if (coBrand !== "None") negativePrompt += `, ${coBrand} logo`;
+      negativePrompt += `, clothing typography, brand logos, graphic text, ${brand} logo`;
+      if (coBrand !== "None") negativePrompt += `, ${coBrand} logo`;
     }
-    if (isProductOnly) negativePrompt += ", humans, models, people, faces, bodies"; 
+    if (isProductOnly) negativePrompt += ", humans, models, people, faces, bodies";
 
     // --- STRICT FACE MODE & UPLOAD ---
     let refInst = useUploadedDesign ? `\nINSTRUCTION: Accommodate the custom graphics from the uploaded image reference perfectly.` : "";
     if (strictFaceMode && !isProductOnly) {
-        refInst += `\nCRITICAL PERSONALIZATION: Maintain STRICT facial consistency of the subject from the reference image. Use --cref to lock facial identity. ONLY adapt wardrobe, pose, and background. Do not alter the core facial structure.`;
+      refInst += `\nCRITICAL PERSONALIZATION: Maintain STRICT facial consistency of the subject from the reference image. Use --cref to lock facial identity. ONLY adapt wardrobe, pose, and background. Do not alter the core facial structure.`;
     }
 
     const isHijabi = gender.includes('Hijab');
@@ -744,52 +740,52 @@ export default function App() {
     let finalBackground = BACKGROUND_STYLES[backgroundStyle];
 
     if (selectedAesthetic !== "None (Standard Fashion)") {
-        const aes = AESTHETIC_THEMES[selectedAesthetic];
-        if (aes) { 
-            aestheticContext = `Aesthetic Core: ${selectedAesthetic}. Overall Vibe & Wardrobe context: ${aes.clothing}. Lighting & Atmosphere: ${aes.lighting}.`;
-            aestheticModelVibe = `Model Expression & Makeup: ${aes.makeup}.`;
-            if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = `Setting & Decor: ${aes.background}.`;
-        }
+      const aes = AESTHETIC_THEMES[selectedAesthetic];
+      if (aes) {
+        aestheticContext = `Aesthetic Core: ${selectedAesthetic}. Overall Vibe & Wardrobe context: ${aes.clothing}. Lighting & Atmosphere: ${aes.lighting}.`;
+        aestheticModelVibe = `Model Expression & Makeup: ${aes.makeup}.`;
+        if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = `Setting & Decor: ${aes.background}.`;
+      }
     } else {
-        if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = BACKGROUND_STYLES["Clean Studio"];
+      if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = BACKGROUND_STYLES["Clean Studio"];
     }
 
     // --- LAYOUT ASSEMBLY ---
     let panelFront, panelBack, panelModel;
 
     if (productType === 'Apparel') {
-        panelFront = `Front view flat lay / tech pack of the garment, highly detailed, clean white background, showing the front tailoring, ${fitStyle.toLowerCase()}, focusing on the ${garmentSilhouette} silhouette. Constructed using ${materialText}.${patternText}${componentText}`;
-        panelBack = `Back view flat lay / tech pack of the garment, detailing the back tailoring and complex fabric paneling.`;
-        panelModel = `A high-fashion lookbook full-body shot of a stunning ${modelGender} model${hijabPrompt} wearing the fusion garment. ${aestheticModelVibe} ${finalBackground}`;
+      panelFront = `Front view flat lay / tech pack of the garment, highly detailed, clean white background, showing the front tailoring, ${fitStyle.toLowerCase()}, focusing on the ${garmentSilhouette} silhouette. Constructed using ${materialText}.${patternText}${componentText}`;
+      panelBack = `Back view flat lay / tech pack of the garment, detailing the back tailoring and complex fabric paneling.`;
+      panelModel = `A high-fashion lookbook full-body shot of a stunning ${modelGender} model${hijabPrompt} wearing the fusion garment. ${aestheticModelVibe} ${finalBackground}`;
     } else if (productType === 'Footwear') {
-        panelFront = `Lateral (outer side) profile view of the footwear, highly detailed studio shot, clean white background, highlighting the ${fitStyle.toLowerCase()} styling and ${garmentSilhouette}. Crafted primarily from ${materialText}.${patternText}${componentText}`;
-        panelBack = `Top-down and sole detail view of the footwear, showcasing the material textures, tread patterns, and complex construction.`;
-        panelModel = `A high-fashion dynamic lookbook shot focusing on a ${modelGender} model's feet wearing the fusion sneakers/shoes. The model is standing in frame. ${aestheticModelVibe} ${finalBackground}`;
-    } else { 
-        panelFront = `Front facing highly detailed product shot of the ${garmentSilhouette}, clean white background, highlighting its ${fitStyle.toLowerCase()} structure. Crafted from ${materialText}.${patternText}${componentText}`;
-        panelBack = `Alternative angle product shot showing intricate structural details, functional elements, or back paneling of the ${accessoryTypeStr}.`;
-        panelModel = `A high-fashion lookbook shot of a ${modelGender} model${hijabPrompt} prominently displaying, carrying, or interacting with the fusion ${accessoryTypeStr}. ${aestheticModelVibe} ${finalBackground}`;
+      panelFront = `Lateral (outer side) profile view of the footwear, highly detailed studio shot, clean white background, highlighting the ${fitStyle.toLowerCase()} styling and ${garmentSilhouette}. Crafted primarily from ${materialText}.${patternText}${componentText}`;
+      panelBack = `Top-down and sole detail view of the footwear, showcasing the material textures, tread patterns, and complex construction.`;
+      panelModel = `A high-fashion dynamic lookbook shot focusing on a ${modelGender} model's feet wearing the fusion sneakers/shoes. The model is standing in frame. ${aestheticModelVibe} ${finalBackground}`;
+    } else {
+      panelFront = `Front facing highly detailed product shot of the ${garmentSilhouette}, clean white background, highlighting its ${fitStyle.toLowerCase()} structure. Crafted from ${materialText}.${patternText}${componentText}`;
+      panelBack = `Alternative angle product shot showing intricate structural details, functional elements, or back paneling of the ${accessoryTypeStr}.`;
+      panelModel = `A high-fashion lookbook shot of a ${modelGender} model${hijabPrompt} prominently displaying, carrying, or interacting with the fusion ${accessoryTypeStr}. ${aestheticModelVibe} ${finalBackground}`;
     }
 
     let layoutPrompt = "";
     if (currentLayoutData.layoutType === 'diptych-vertical') {
-        layoutPrompt = `layout split horizontally into 2 vertical panels (Top and Bottom).\nTop Panel: ${panelModel}\nBottom Panel: ${panelFront}`;
+      layoutPrompt = `layout split horizontally into 2 vertical panels (Top and Bottom).\nTop Panel: ${panelModel}\nBottom Panel: ${panelFront}`;
     } else if (currentLayoutData.layoutType === 'diptych-horizontal') {
-        layoutPrompt = `layout split vertically into 2 perfectly equal horizontal panels (Left and Right).\nLeft Panel: ${panelFront}\nRight Panel: ${panelBack}`;
+      layoutPrompt = `layout split vertically into 2 perfectly equal horizontal panels (Left and Right).\nLeft Panel: ${panelFront}\nRight Panel: ${panelBack}`;
     } else {
-        let leftPanel, centerPanel, rightPanel;
-        if (layoutPos === 'Center') { leftPanel = panelFront; centerPanel = panelModel; rightPanel = panelBack; } 
-        else if (layoutPos === 'Left') { leftPanel = panelModel; centerPanel = panelFront; rightPanel = panelBack; } 
-        else { leftPanel = panelFront; centerPanel = panelBack; rightPanel = panelModel; }
-        
-        layoutPrompt = `triptych layout split perfectly into 3 vertical panels.\nLeft Panel: ${leftPanel}\nCenter Panel: ${centerPanel}\nRight Panel: ${rightPanel}`;
+      let leftPanel, centerPanel, rightPanel;
+      if (layoutPos === 'Center') { leftPanel = panelFront; centerPanel = panelModel; rightPanel = panelBack; }
+      else if (layoutPos === 'Left') { leftPanel = panelModel; centerPanel = panelFront; rightPanel = panelBack; }
+      else { leftPanel = panelFront; centerPanel = panelBack; rightPanel = panelModel; }
+
+      layoutPrompt = `triptych layout split perfectly into 3 vertical panels.\nLeft Panel: ${leftPanel}\nCenter Panel: ${centerPanel}\nRight Panel: ${rightPanel}`;
     }
 
     let conceptBrandStr = whiteLabel ? "an unbranded high-fashion" : `${brand}${coBrandText}`;
 
     const basePrompt = `A stunning product and fashion editorial photography, ${layoutPrompt}
 
-Concept: A crossover ${productType.toLowerCase()} design combining ${conceptBrandStr}${collabText} (${category} style: ${brandStyle}) with the structural silhouette of ${garmentSilhouette} (${garmentTraits}). 
+Concept: A crossover ${productType.toLowerCase()} design combining ${conceptBrandStr}${collabText} (${category} style: ${brandStyle}) with the structural silhouette of ${garmentSilhouette} (${garmentTraits}).
 ${aestheticContext}
 ${collabDetails}
 Primary Materials: ${materialText}.
@@ -820,106 +816,106 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
   const renderVisualPreview = () => {
     const currentLayoutData = ASPECT_RATIOS[aspectRatio];
     let bgStyleStr = '#e5e5e5';
-    
+
     if (selectedAesthetic !== "None (Standard Fashion)") {
-        const aesName = selectedAesthetic.toLowerCase();
-        if (aesName.includes('opium') || aesName.includes('cyber') || aesName.includes('dark')) bgStyleStr = 'linear-gradient(to bottom, #1a0b16, #000000)';
-        else if (aesName.includes('cottage') || aesName.includes('forest')) bgStyleStr = 'linear-gradient(to bottom, #dcedc8, #aed581)';
-        else if (aesName.includes('y2k') || aesName.includes('fairy')) bgStyleStr = 'linear-gradient(to bottom, #ff4081, #7c4dff)';
+      const aesName = selectedAesthetic.toLowerCase();
+      if (aesName.includes('opium') || aesName.includes('cyber') || aesName.includes('dark')) bgStyleStr = 'linear-gradient(to bottom, #1a0b16, #000000)';
+      else if (aesName.includes('cottage') || aesName.includes('forest')) bgStyleStr = 'linear-gradient(to bottom, #dcedc8, #aed581)';
+      else if (aesName.includes('y2k') || aesName.includes('fairy')) bgStyleStr = 'linear-gradient(to bottom, #ff4081, #7c4dff)';
     } else {
-        if (backgroundStyle === 'Cyberpunk City') bgStyleStr = 'linear-gradient(to bottom, #2b0b3a, #0f172a)';
-        if (backgroundStyle === 'Urban / Street') bgStyleStr = 'linear-gradient(to bottom, #1a1a2e, #0f172a)';
-        if (backgroundStyle === 'White Sand Beach') bgStyleStr = 'linear-gradient(to bottom, #00BFFF, #F5DEB3)';
+      if (backgroundStyle === 'Cyberpunk City') bgStyleStr = 'linear-gradient(to bottom, #2b0b3a, #0f172a)';
+      if (backgroundStyle === 'Urban / Street') bgStyleStr = 'linear-gradient(to bottom, #1a1a2e, #0f172a)';
+      if (backgroundStyle === 'White Sand Beach') bgStyleStr = 'linear-gradient(to bottom, #00BFFF, #F5DEB3)';
     }
 
     const ProductIcon = productType === 'Footwear' ? Footprints : productType === 'Accessories' ? Briefcase : Shirt;
 
     const ModelNode = (
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 shadow-[0_0_30px_rgba(0,0,0,0.5)]" style={{ background: bgStyleStr }}>
+      <div className="flex-1 flex flex-col items-center justify-center relative z-10 shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-all duration-300 hover:scale-[1.02]" style={{ background: bgStyleStr }}>
         <span className={`absolute text-[9px] font-bold bottom-2 tracking-widest ${backgroundStyle === 'Clean Studio' ? 'text-neutral-500' : 'text-red-400 mix-blend-difference'}`}>MODEL / LIFESTYLE</span>
         <div className={`w-8 h-20 md:h-24 rounded-full flex items-center justify-center ${backgroundStyle === 'Clean Studio' ? 'bg-neutral-300' : 'bg-white/20 border border-white/50 shadow-lg relative'}`}>
-            📸
-            {strictFaceMode && <span className="absolute -top-2 -right-2 text-[10px]" title="Strict Face Protection">🔒</span>}
+          📸
+          {strictFaceMode && <span className="absolute -top-2 -right-2 text-[10px]" title="Strict Face Protection">🔒</span>}
         </div>
       </div>
     );
 
     const FrontNode = (
-      <div className="flex-1 border-neutral-800/50 flex flex-col items-center justify-center relative bg-white/5 border-r border-t">
+      <div className="flex-1 border-neutral-800/50 flex flex-col items-center justify-center relative bg-white/5 border-r border-t transition-all duration-300 hover:bg-white/10">
         <span className="absolute text-[9px] font-bold text-neutral-500 bottom-2 tracking-widest">PRODUCT</span>
         <ProductIcon className="w-8 h-8 text-neutral-600 opacity-50" />
       </div>
     );
 
     const BackNode = (
-      <div className="flex-1 border-neutral-800/50 flex flex-col items-center justify-center relative bg-white/5 border-l">
+      <div className="flex-1 border-neutral-800/50 flex flex-col items-center justify-center relative bg-white/5 border-l transition-all duration-300 hover:bg-white/10">
         <span className="absolute text-[9px] font-bold text-neutral-500 bottom-2 tracking-widest">DETAIL</span>
         <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-dashed border-neutral-600 rounded-md opacity-40"></div>
       </div>
     );
 
     if (currentLayoutData.layoutType === 'diptych-vertical') {
-        return (
-            <div className="aspect-[9/16] w-[160px] md:w-[200px] mx-auto bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex flex-col overflow-hidden shadow-inner">
-                {ModelNode}
-                {FrontNode}
-            </div>
-        );
+      return (
+        <div className="aspect-[9/16] w-[160px] md:w-[200px] mx-auto bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex flex-col overflow-hidden shadow-inner transition-all duration-300 hover:shadow-xl hover:border-neutral-700">
+          {ModelNode}
+          {FrontNode}
+        </div>
+      );
     } else if (currentLayoutData.layoutType === 'diptych-horizontal') {
-        return (
-            <div className="aspect-[16/9] w-full bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex overflow-hidden shadow-inner">
-                {FrontNode}
-                {BackNode}
-            </div>
-        );
+      return (
+        <div className="aspect-[16/9] w-full bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex overflow-hidden shadow-inner transition-all duration-300 hover:shadow-xl hover:border-neutral-700">
+          {FrontNode}
+          {BackNode}
+        </div>
+      );
     }
 
     const getNodes = () => {
-        if (layoutPos === 'Center') return [FrontNode, ModelNode, BackNode];
-        if (layoutPos === 'Left') return [ModelNode, FrontNode, BackNode];
-        return [FrontNode, BackNode, ModelNode];
+      if (layoutPos === 'Center') return [FrontNode, ModelNode, BackNode];
+      if (layoutPos === 'Left') return [ModelNode, FrontNode, BackNode];
+      return [FrontNode, BackNode, ModelNode];
     };
 
     return (
-        <div className="aspect-[16/9] w-full bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex overflow-hidden shadow-inner">
-            {getNodes().map((node, i) => React.cloneElement(node, { key: i }))}
-        </div>
+      <div className="aspect-[16/9] w-full bg-neutral-950 border border-neutral-800 rounded-2xl mb-5 flex overflow-hidden shadow-inner transition-all duration-300 hover:shadow-xl hover:border-neutral-700">
+        {getNodes().map((node, i) => React.cloneElement(node, { key: i }))}
+      </div>
     );
   };
 
   return (
     <div className="min-h-screen bg-[#050505] text-neutral-100 p-2 md:p-6 font-sans selection:bg-red-500/30">
       <div className="max-w-7xl mx-auto space-y-6">
-        
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4 bg-neutral-900/50 p-4 rounded-2xl border border-neutral-800">
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4 bg-neutral-900/50 p-4 rounded-2xl border border-neutral-800 backdrop-blur-sm transition-all duration-300 hover:bg-neutral-900/70">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-red-500/10 rounded-xl border border-red-500/20 hidden md:flex">
-                <Gamepad2 className="w-6 h-6 text-red-500" />
+            <div className="p-3 bg-red-500/10 rounded-xl border border-red-500/20 hidden md:flex transition-transform duration-300 hover:scale-105">
+              <Gamepad2 className="w-6 h-6 text-red-500" />
             </div>
             <div>
-                <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">Fashion Gen <span className="text-red-500">v65</span></h1>
-                <p className="text-neutral-400 text-[11px] md:text-xs font-medium">Single Garment Detail Engine & Strict Cref Focus</p>
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">Fashion Gen <span className="text-red-500">v65</span></h1>
+              <p className="text-neutral-400 text-[11px] md:text-xs font-medium">Single Garment Detail Engine & Strict Cref Focus</p>
             </div>
           </div>
-          <button onClick={smartRandomize} className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
-            <Sparkles className="w-4 h-4" /> SMART RANDOMIZE
+          <button onClick={smartRandomize} className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_25px_rgba(239,68,68,0.6)]">
+            <Sparkles className="w-4 h-4 transition-transform duration-500 group-hover:rotate-12" /> SMART RANDOMIZE
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          <div className="lg:col-span-8 space-y-5 bg-[#0a0a0a] border border-neutral-800 p-4 lg:p-6 rounded-[2rem] shadow-2xl">
-            
+
+          <div className="lg:col-span-8 space-y-5 bg-[#0a0a0a] border border-neutral-800 p-4 lg:p-6 rounded-[2rem] shadow-2xl transition-all duration-300 hover:shadow-red-500/5">
+
             {/* TABS: PRODUCT TYPE */}
             <div className="flex bg-neutral-900 p-1.5 rounded-2xl border border-neutral-800">
               {['Apparel', 'Footwear', 'Accessories'].map(type => (
                 <button key={type} onClick={() => handleProductTypeChange(type)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all ${
-                    productType === type ? 'bg-red-500 text-white shadow-md' : 'text-neutral-500 hover:text-white hover:bg-neutral-800'
-                  }`}>
-                  {type === 'Apparel' && <Shirt className="w-4 h-4"/>}
-                  {type === 'Footwear' && <Footprints className="w-4 h-4"/>}
-                  {type === 'Accessories' && <Briefcase className="w-4 h-4"/>}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold transition-all duration-200 ${
+                    productType === type ? 'bg-red-500 text-white shadow-md scale-[1.02]' : 'text-neutral-500 hover:text-white hover:bg-neutral-800'
+                  } focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-900`}>
+                  {type === 'Apparel' && <Shirt className="w-4 h-4" />}
+                  {type === 'Footwear' && <Footprints className="w-4 h-4" />}
+                  {type === 'Accessories' && <Briefcase className="w-4 h-4" />}
                   {type}
                 </button>
               ))}
@@ -927,158 +923,173 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
 
             {/* STEP 1: Brand & Collab */}
             <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                    <label className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-500">1</span>
-                    Brand Concept & Collab
-                    </label>
-                    <label className="flex items-center cursor-pointer gap-1.5 bg-neutral-900 px-2 py-1 rounded border border-neutral-800" title="Matikan logo brand">
-                        <span className="text-[9px] font-bold text-neutral-500 flex items-center gap-1"><Ghost className="w-3 h-3"/> WHITE LABEL</span>
-                        <div className="relative">
-                            <input type="checkbox" className="sr-only" checked={whiteLabel} onChange={() => setWhiteLabel(!whiteLabel)} />
-                            <div className={`block w-6 h-3 rounded-full transition-colors ${whiteLabel ? 'bg-red-500' : 'bg-neutral-700'}`}></div>
-                            <div className={`dot absolute left-[2px] top-[2px] bg-white w-2 h-2 rounded-full transition-transform ${whiteLabel ? 'transform translate-x-3' : ''}`}></div>
-                        </div>
-                    </label>
+              <div className="flex justify-between items-center">
+                <label className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-500">1</span>
+                  Brand Concept & Collab
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="text-[9px] font-bold text-neutral-500 flex items-center gap-1"><Ghost className="w-3 h-3" /> WHITE LABEL</span>
+                  <button
+                    role="switch"
+                    aria-checked={whiteLabel}
+                    onClick={() => setWhiteLabel(!whiteLabel)}
+                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-neutral-900 ${
+                      whiteLabel ? 'bg-red-500' : 'bg-neutral-700'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform duration-200 ${
+                        whiteLabel ? 'translate-x-5' : 'translate-x-0.5'
+                      }`}
+                    />
+                  </button>
                 </div>
-                
-                <div className="grid grid-cols-2 lg:grid-cols-6 gap-1 p-1 bg-neutral-900 rounded-xl border border-neutral-800 mb-2">
-                  {Object.keys(FASHION_CATEGORIES).map(cat => (
-                    <button key={cat} onClick={() => { setCategory(cat); handleBrandChange(FASHION_CATEGORIES[cat].brands[0]); }}
-                      className={`text-[10px] font-bold py-2 px-1 rounded-lg transition-all text-center ${
-                        category === cat ? 'bg-neutral-800 text-white shadow border border-neutral-700' : 'text-neutral-500 hover:text-neutral-300'
-                      }`}>
-                      {cat.split('/')[0].trim()}
-                    </button>
-                  ))}
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-6 gap-1 p-1 bg-neutral-900 rounded-xl border border-neutral-800 mb-2">
+                {Object.keys(FASHION_CATEGORIES).map(cat => (
+                  <button key={cat} onClick={() => { setCategory(cat); handleBrandChange(FASHION_CATEGORIES[cat].brands[0]); }}
+                    className={`text-[10px] font-bold py-2 px-1 rounded-lg transition-all text-center duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                      category === cat ? 'bg-neutral-800 text-white shadow border border-neutral-700' : 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/50'
+                    }`}>
+                    {cat.split('/')[0].trim()}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {/* MAIN BRAND & CO-BRAND */}
+                <div className="flex flex-col gap-2">
+                  <select value={brand} onChange={(e) => handleBrandChange(e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-sm font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2.5 transition-all duration-200 hover:border-neutral-700">
+                    {FASHION_CATEGORIES[category].brands.map(b => <option key={b} value={b}>{b}</option>)}
+                  </select>
+
+                  <div className="flex gap-1">
+                    <select value={coBrandCat} onChange={(e) => { setCoBrandCat(e.target.value); setCoBrand("None"); }} className="w-1/3 bg-neutral-900 border border-neutral-800 text-neutral-400 text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2.5 text-center transition-all duration-200 hover:border-neutral-700">
+                      <option value="All">All Cats</option>
+                      {Object.keys(FASHION_CATEGORIES).map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                    <select value={coBrand} onChange={(e) => setCoBrand(e.target.value)} className="w-2/3 bg-neutral-900 border border-neutral-800 text-neutral-300 text-xs font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2.5 pl-4 transition-all duration-200 hover:border-neutral-700">
+                      <option value="None">-- No Co-Brand --</option>
+                      {getCoBrandList().map(b => <option key={b} value={b}>{b}</option>)}
+                    </select>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {/* MAIN BRAND & CO-BRAND */}
-                  <div className="flex flex-col gap-2">
-                      <select value={brand} onChange={(e) => handleBrandChange(e.target.value)} 
-                        className="w-full bg-neutral-900 border border-neutral-800 text-white text-sm font-bold rounded-xl focus:ring-red-500 p-2.5">
-                        {FASHION_CATEGORIES[category].brands.map(b => <option key={b} value={b}>{b}</option>)}
-                      </select>
-                      
+                {/* IP / ARTIST COLLAB */}
+                <div className="bg-red-950/10 border border-red-500/20 rounded-xl p-2 flex flex-col gap-2 transition-all duration-200 hover:border-red-500/40">
+                  <div className="flex bg-neutral-950 rounded-lg p-0.5">
+                    <button onClick={() => setCollabType('Artist')} className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                      collabType === 'Artist' ? 'bg-red-500 text-white' : 'text-neutral-500 hover:text-neutral-300'
+                    }`}>Designer / Artist</button>
+                    <button onClick={() => setCollabType('IP')} className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      collabType === 'IP' ? 'bg-blue-500 text-white' : 'text-neutral-500 hover:text-neutral-300'
+                    }`}>Pop-Culture IP</button>
+                  </div>
+
+                  {collabType === 'Artist' ? (
+                    <select value={collabArtist} onChange={(e) => setCollabArtist(e.target.value)} className="w-full bg-neutral-900 border border-neutral-800 text-red-300 text-xs font-bold rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none p-2 transition-all duration-200 hover:border-neutral-700">
+                      {Object.keys(COLLAB_ARTISTS).map(c => <option key={c} value={c} className="text-white">{c}</option>)}
+                    </select>
+                  ) : (
+                    <div className="flex flex-col gap-1">
                       <div className="flex gap-1">
-                          <select value={coBrandCat} onChange={(e) => { setCoBrandCat(e.target.value); setCoBrand("None"); }} className="w-1/3 bg-neutral-900 border border-neutral-800 text-neutral-400 text-[10px] font-bold rounded-xl focus:ring-red-500 p-2.5 text-center">
-                              <option value="All">All Cats</option>
-                              {Object.keys(FASHION_CATEGORIES).map(c => <option key={c} value={c}>{c}</option>)}
-                          </select>
-                          <select value={coBrand} onChange={(e) => setCoBrand(e.target.value)} className="w-2/3 bg-neutral-900 border border-neutral-800 text-neutral-300 text-xs font-bold rounded-xl focus:ring-red-500 p-2.5 pl-4">
-                            <option value="None">-- No Co-Brand --</option>
-                            {getCoBrandList().map(b => <option key={b} value={b}>{b}</option>)}
-                          </select>
+                        <select value={collabIP} onChange={(e) => { setCollabIP(e.target.value); if(e.target.value !== "None" && e.target.value !== "Custom IP (Type Manual)") setCollabCharacter(COLLAB_IPS[e.target.value][0]); }} className="w-1/2 bg-neutral-900 border border-neutral-800 text-blue-300 text-xs font-bold rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none p-2 transition-all duration-200 hover:border-neutral-700">
+                          <option value="None">-- No IP --</option>
+                          {Object.keys(COLLAB_IPS).filter(k => k !== "None").map(ip => <option key={ip} value={ip} className="text-white">{ip}</option>)}
+                        </select>
+                        <select value={collabCharacter} onChange={(e) => setCollabCharacter(e.target.value)} disabled={collabIP === "None" || collabIP === "Custom IP (Type Manual)"} className={`w-1/2 bg-neutral-900 border border-neutral-800 text-blue-300 text-[10px] font-bold rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none p-2 transition-all duration-200 ${
+                          (collabIP === "None" || collabIP === "Custom IP (Type Manual)") ? 'opacity-50' : 'hover:border-neutral-700'
+                        }`}>
+                          {collabIP !== "None" && collabIP !== "Custom IP (Type Manual)" && COLLAB_IPS[collabIP].map(char => <option key={char} value={char} className="text-white">{char}</option>)}
+                          {collabIP === "None" && <option>Select IP First</option>}
+                          {collabIP === "Custom IP (Type Manual)" && <option>Custom Entry</option>}
+                        </select>
                       </div>
-                  </div>
-
-                  {/* IP / ARTIST COLLAB */}
-                  <div className="bg-red-950/10 border border-red-500/20 rounded-xl p-2 flex flex-col gap-2">
-                      <div className="flex bg-neutral-950 rounded-lg p-0.5">
-                        <button onClick={() => setCollabType('Artist')} className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition-all ${collabType === 'Artist' ? 'bg-red-500 text-white' : 'text-neutral-500'}`}>Designer / Artist</button>
-                        <button onClick={() => setCollabType('IP')} className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition-all ${collabType === 'IP' ? 'bg-blue-500 text-white' : 'text-neutral-500'}`}>Pop-Culture IP</button>
-                      </div>
-                      
-                      {collabType === 'Artist' ? (
-                          <select value={collabArtist} onChange={(e) => setCollabArtist(e.target.value)} className="w-full bg-neutral-900 border border-neutral-800 text-red-300 text-xs font-bold rounded-lg focus:ring-red-500 p-2">
-                              {Object.keys(COLLAB_ARTISTS).map(c => <option key={c} value={c} className="text-white">{c}</option>)}
-                          </select>
-                      ) : (
-                          <div className="flex flex-col gap-1">
-                              <div className="flex gap-1">
-                                  <select value={collabIP} onChange={(e) => { setCollabIP(e.target.value); if(e.target.value !== "None" && e.target.value !== "Custom IP (Type Manual)") setCollabCharacter(COLLAB_IPS[e.target.value][0]); }} className="w-1/2 bg-neutral-900 border border-neutral-800 text-blue-300 text-xs font-bold rounded-lg focus:ring-blue-500 p-2">
-                                      <option value="None">-- No IP --</option>
-                                      {Object.keys(COLLAB_IPS).filter(k => k !== "None").map(ip => <option key={ip} value={ip} className="text-white">{ip}</option>)}
-                                  </select>
-                                  <select value={collabCharacter} onChange={(e) => setCollabCharacter(e.target.value)} disabled={collabIP === "None" || collabIP === "Custom IP (Type Manual)"} className={`w-1/2 bg-neutral-900 border border-neutral-800 text-blue-300 text-[10px] font-bold rounded-lg focus:ring-blue-500 p-2 ${(collabIP === "None" || collabIP === "Custom IP (Type Manual)") ? 'opacity-50' : ''}`}>
-                                      {collabIP !== "None" && collabIP !== "Custom IP (Type Manual)" && COLLAB_IPS[collabIP].map(char => <option key={char} value={char} className="text-white">{char}</option>)}
-                                      {collabIP === "None" && <option>Select IP First</option>}
-                                      {collabIP === "Custom IP (Type Manual)" && <option>Custom Entry</option>}
-                                  </select>
-                              </div>
-                              {collabIP === "Custom IP (Type Manual)" && (
-                                  <input 
-                                    type="text" 
-                                    value={customIPText} 
-                                    onChange={(e) => setCustomIPText(e.target.value)} 
-                                    placeholder="Type character or IP name (e.g., Optimus Prime)" 
-                                    className="w-full bg-neutral-900 border border-blue-500/50 text-white text-xs p-2 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                  />
-                              )}
-                          </div>
+                      {collabIP === "Custom IP (Type Manual)" && (
+                        <input
+                          type="text"
+                          value={customIPText}
+                          onChange={(e) => setCustomIPText(e.target.value)}
+                          placeholder="Type character or IP name (e.g., Optimus Prime)"
+                          className="w-full bg-neutral-900 border border-blue-500/50 text-white text-xs p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200"
+                        />
                       )}
-                  </div>
+                    </div>
+                  )}
                 </div>
+              </div>
             </div>
 
             <div className="h-px w-full bg-neutral-800/50"></div>
 
             {/* STEP 2: Base Inspiration */}
             <div className="space-y-3">
-               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-[10px] text-red-500">2</span>
-                  Base Inspiration ({productType})
-                </label>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <select value={menuCategory} onChange={(e) => handleMenuCategoryChange(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl focus:ring-red-500 p-3">
-                    {getGarmentMenuCategories(productType).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                  </select>
-                  <select value={baseGarment?.name || ""} onChange={(e) => handleGarmentChange(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-semibold rounded-xl focus:ring-red-500 p-3">
-                    {availableGarments.map(g => {
-                      return <option key={g.name} value={g.name}>{g.name}</option>
-                    })}
-                  </select>
-                </div>
-                
-                {productType === 'Accessories' && baseGarment?.name === "Custom Shape (Type Manual)" && (
-                  <input 
-                    type="text" 
-                    value={customShapeText} 
-                    onChange={(e) => setCustomShapeText(e.target.value)} 
-                    placeholder="Describe custom shape (e.g., Brick Shape, Plastic Bag, Helmet)" 
-                    className="w-full bg-neutral-950 border border-orange-500/50 text-orange-200 font-bold text-xs p-3 rounded-xl focus:ring-orange-500"
-                  />
-                )}
+              <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-[10px] text-red-500">2</span>
+                Base Inspiration ({productType})
+              </label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <select value={menuCategory} onChange={(e) => handleMenuCategoryChange(e.target.value)}
+                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-3 transition-all duration-200 hover:border-neutral-700">
+                  {getGarmentMenuCategories(productType).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+                <select value={baseGarment?.name || ""} onChange={(e) => handleGarmentChange(e.target.value)}
+                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-semibold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-3 transition-all duration-200 hover:border-neutral-700">
+                  {availableGarments.map(g => <option key={g.name} value={g.name}>{g.name}</option>)}
+                </select>
+              </div>
+
+              {productType === 'Accessories' && baseGarment?.name === "Custom Shape (Type Manual)" && (
+                <input
+                  type="text"
+                  value={customShapeText}
+                  onChange={(e) => setCustomShapeText(e.target.value)}
+                  placeholder="Describe custom shape (e.g., Brick Shape, Plastic Bag, Helmet)"
+                  className="w-full bg-neutral-950 border border-orange-500/50 text-orange-200 font-bold text-xs p-3 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-200"
+                />
+              )}
             </div>
 
             {/* STEP 3: Multi-Material */}
-            <div className="space-y-3 bg-neutral-900/50 p-4 rounded-2xl border border-neutral-800">
-               <div className="flex justify-between items-center">
-                 <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-red-500/30 flex items-center justify-center text-[10px] text-red-500">3</span>
-                    Mixed Materials (Max 3)
-                  </label>
-                  <span className={`text-[10px] font-bold px-2 py-1 rounded ${materials.length === 3 ? 'bg-red-500 text-white' : 'bg-neutral-800 text-neutral-400'}`}>
-                    {materials.length} / 3
-                  </span>
-               </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
-                  {ALL_MATS.map(mat => {
-                    const isAllowed = baseGarment?.allowedMats?.includes(mat) ?? false;
-                    const isSelected = materials.includes(mat);
-                    const isMaxedOut = !isSelected && materials.length >= 3;
-                    const isDisabled = !isAllowed || isMaxedOut;
+            <div className="space-y-3 bg-neutral-900/50 p-4 rounded-2xl border border-neutral-800 transition-all duration-200 hover:border-neutral-700">
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-red-500/30 flex items-center justify-center text-[10px] text-red-500">3</span>
+                  Mixed Materials (Max 3)
+                </label>
+                <span className={`text-[10px] font-bold px-2 py-1 rounded transition-colors duration-200 ${
+                  materials.length === 3 ? 'bg-red-500 text-white' : 'bg-neutral-800 text-neutral-400'
+                }`}>
+                  {materials.length} / 3
+                </span>
+              </div>
 
-                    return (
-                      <button key={mat} onClick={() => toggleMaterial(mat)} disabled={isDisabled}
-                        className={`text-left text-[10px] p-2 rounded-lg border transition-all ${
-                          isSelected ? 'border-red-500 bg-red-500/20 text-white shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 
-                          isDisabled ? 'border-neutral-800/50 bg-neutral-950 text-neutral-600 cursor-not-allowed opacity-30' :
-                          'border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-700 hover:text-neutral-200'
-                        }`}>
-                        <div className="flex items-center justify-between">
-                            <span className="font-bold block truncate">{mat}</span>
-                            {isSelected && <CheckCircle2 className="w-3 h-3 text-red-500 flex-shrink-0" />}
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                {ALL_MATS.map(mat => {
+                  const isAllowed = baseGarment?.allowedMats?.includes(mat) ?? false;
+                  const isSelected = materials.includes(mat);
+                  const isMaxedOut = !isSelected && materials.length >= 3;
+                  const isDisabled = !isAllowed || isMaxedOut;
+
+                  return (
+                    <button key={mat} onClick={() => toggleMaterial(mat)} disabled={isDisabled}
+                      className={`text-left text-[10px] p-2 rounded-lg border transition-all duration-200 ${
+                        isSelected ? 'border-red-500 bg-red-500/20 text-white shadow-[0_0_10px_rgba(239,68,68,0.3)] scale-[1.02]' :
+                        isDisabled ? 'border-neutral-800/50 bg-neutral-950 text-neutral-600 cursor-not-allowed opacity-30' :
+                        'border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-700 hover:text-neutral-200 hover:bg-neutral-800'
+                      } focus:outline-none focus:ring-2 focus:ring-red-500`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold block truncate">{mat}</span>
+                        {isSelected && <CheckCircle2 className="w-3 h-3 text-red-500 flex-shrink-0" />}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1088,33 +1099,31 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                   Structure & Components
                 </label>
                 <div className="grid grid-cols-2 gap-1.5 mb-2">
-                  {DYNAMIC_FITS[productType].map(fit => {
-                    return (
-                      <button key={fit} onClick={() => setFitStyle(fit)}
-                        className={`text-left text-[10px] p-2.5 rounded-xl border transition-all ${
-                          fitStyle === fit ? 'border-red-500 bg-red-500/10 text-white' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-700'
-                        }`}>
-                        <span className="block font-bold">{fit}</span>
-                      </button>
-                    )
-                  })}
+                  {DYNAMIC_FITS[productType].map(fit => (
+                    <button key={fit} onClick={() => setFitStyle(fit)}
+                      className={`text-left text-[10px] p-2.5 rounded-xl border transition-all duration-200 ${
+                        fitStyle === fit ? 'border-red-500 bg-red-500/10 text-white' : 'border-neutral-800 bg-neutral-900 text-neutral-400 hover:border-neutral-700 hover:bg-neutral-800'
+                      } focus:outline-none focus:ring-2 focus:ring-red-500`}>
+                      <span className="block font-bold">{fit}</span>
+                    </button>
+                  ))}
                 </div>
-                
+
                 <div className={`grid gap-2 ${productType === 'Footwear' ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                    <select value={designComponent1} onChange={(e) => setDesignComponent1(e.target.value)}
-                        className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-red-500 p-2 truncate">
-                        {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
+                  <select value={designComponent1} onChange={(e) => setDesignComponent1(e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
+                    {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
+                  </select>
+                  <select value={designComponent2} onChange={(e) => setDesignComponent2(e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
+                    {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
+                  </select>
+                  {productType === 'Footwear' && (
+                    <select value={designComponent3} onChange={(e) => setDesignComponent3(e.target.value)}
+                      className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
+                      {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
                     </select>
-                    <select value={designComponent2} onChange={(e) => setDesignComponent2(e.target.value)}
-                        className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-red-500 p-2 truncate">
-                        {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
-                    </select>
-                    {productType === 'Footwear' && (
-                        <select value={designComponent3} onChange={(e) => setDesignComponent3(e.target.value)}
-                            className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-red-500 p-2 truncate">
-                            {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
-                        </select>
-                    )}
+                  )}
                 </div>
               </div>
 
@@ -1124,50 +1133,50 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                   Aesthetic & Pattern
                 </label>
                 <select value={selectedAesthetic} onChange={(e) => { setSelectedAesthetic(e.target.value); applyAutoColors(); }}
-                    className="w-full bg-indigo-950 border border-indigo-500/50 text-indigo-200 text-xs font-bold rounded-xl focus:ring-indigo-500 p-2.5">
-                    <option value="None (Standard Fashion)">Select Aesthetic: None (Standard)</option>
-                    {Object.values(AESTHETIC_THEMES).reduce((acc, aes) => {
-                        if (!aes) return acc;
-                        if (!acc.includes(aes.group)) acc.push(aes.group);
-                        return acc;
-                    }, []).map(group => (
-                        <optgroup key={group} label={group}>
-                            {Object.entries(AESTHETIC_THEMES).filter(([k,v]) => v && v.group === group).map(([k,v]) => (
-                                <option key={k} value={k}>{k}</option>
-                            ))}
-                        </optgroup>
-                    ))}
+                  className="w-full bg-indigo-950 border border-indigo-500/50 text-indigo-200 text-xs font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none p-2.5 transition-all duration-200 hover:border-indigo-500">
+                  <option value="None (Standard Fashion)">Select Aesthetic: None (Standard)</option>
+                  {Object.values(AESTHETIC_THEMES).reduce((acc, aes) => {
+                    if (!aes) return acc;
+                    if (!acc.includes(aes.group)) acc.push(aes.group);
+                    return acc;
+                  }, []).map(group => (
+                    <optgroup key={group} label={group}>
+                      {Object.entries(AESTHETIC_THEMES).filter(([k,v]) => v && v.group === group).map(([k,v]) => (
+                        <option key={k} value={k}>{k}</option>
+                      ))}
+                    </optgroup>
+                  ))}
                 </select>
 
                 <select value={designStyle} onChange={(e) => setDesignStyle(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl focus:ring-red-500 p-2.5 mt-2">
-                    {Object.keys(DESIGN_STYLES).map(style => <option key={style} value={style}>{style}</option>)}
+                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2.5 mt-2 transition-all duration-200 hover:border-neutral-700">
+                  {Object.keys(DESIGN_STYLES).map(style => <option key={style} value={style}>{style}</option>)}
                 </select>
 
-                <div className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 rounded-xl p-2 mt-2">
-                     <Palette className="w-4 h-4 text-red-500 flex-shrink-0 ml-1" />
-                     <select value={selectedPattern} onChange={(e) => setSelectedPattern(e.target.value)} className="w-full bg-transparent text-xs text-red-300 font-bold focus:ring-0 p-1 truncate">
-                         {Object.entries(GLOBAL_PATTERNS).map(([region, patterns]) => (
-                             <optgroup key={region} label={`Global: ${region}`}>
-                                 {patterns.map(p => <option key={p} value={p} className="bg-neutral-900 text-white">{p}</option>)}
-                             </optgroup>
-                         ))}
-                         {BRAND_PATTERNS[brand] && (
-                             <optgroup label={`${brand} Iconic Patterns`}>
-                                 {BRAND_PATTERNS[brand].map(p => <option key={p} value={p} className="bg-neutral-900 text-white">{p}</option>)}
-                             </optgroup>
-                         )}
-                         {coBrand !== "None" && BRAND_PATTERNS[coBrand] && (
-                             <optgroup label={`${coBrand} (Co-Brand) Patterns`}>
-                                 {BRAND_PATTERNS[coBrand].map(p => <option key={p} value={p} className="bg-neutral-900 text-yellow-300">{p}</option>)}
-                             </optgroup>
-                         )}
-                         {collabType === 'Artist' && collabArtist !== "None" && ARTIST_PATTERNS[collabArtist] && (
-                             <optgroup label={`${collabArtist} Patterns`}>
-                                 {ARTIST_PATTERNS[collabArtist].map(p => <option key={p} value={p} className="bg-neutral-900 text-cyan-300">{p}</option>)}
-                             </optgroup>
-                         )}
-                     </select>
+                <div className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 rounded-xl p-2 mt-2 transition-all duration-200 hover:border-neutral-700">
+                  <Palette className="w-4 h-4 text-red-500 flex-shrink-0 ml-1" />
+                  <select value={selectedPattern} onChange={(e) => setSelectedPattern(e.target.value)} className="w-full bg-transparent text-xs text-red-300 font-bold focus:ring-0 p-1 truncate transition-all duration-200">
+                    {Object.entries(GLOBAL_PATTERNS).map(([region, patterns]) => (
+                      <optgroup key={region} label={`Global: ${region}`}>
+                        {patterns.map(p => <option key={p} value={p} className="bg-neutral-900 text-white">{p}</option>)}
+                      </optgroup>
+                    ))}
+                    {BRAND_PATTERNS[brand] && (
+                      <optgroup label={`${brand} Iconic Patterns`}>
+                        {BRAND_PATTERNS[brand].map(p => <option key={p} value={p} className="bg-neutral-900 text-white">{p}</option>)}
+                      </optgroup>
+                    )}
+                    {coBrand !== "None" && BRAND_PATTERNS[coBrand] && (
+                      <optgroup label={`${coBrand} (Co-Brand) Patterns`}>
+                        {BRAND_PATTERNS[coBrand].map(p => <option key={p} value={p} className="bg-neutral-900 text-yellow-300">{p}</option>)}
+                      </optgroup>
+                    )}
+                    {collabType === 'Artist' && collabArtist !== "None" && ARTIST_PATTERNS[collabArtist] && (
+                      <optgroup label={`${collabArtist} Patterns`}>
+                        {ARTIST_PATTERNS[collabArtist].map(p => <option key={p} value={p} className="bg-neutral-900 text-cyan-300">{p}</option>)}
+                      </optgroup>
+                    )}
+                  </select>
                 </div>
               </div>
             </div>
@@ -1175,7 +1184,7 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
             <div className="h-px w-full bg-neutral-800/50"></div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              
+
               {/* WARNA DENGAN CHECKBOX INDIVIDUAL */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -1184,28 +1193,28 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                     Intelligent Color Logic
                   </label>
                 </div>
-                
-                <div className="bg-neutral-900 p-2 rounded-xl border border-neutral-800 flex flex-col gap-2">
+
+                <div className="bg-neutral-900 p-2 rounded-xl border border-neutral-800 flex flex-col gap-2 transition-all duration-200 hover:border-neutral-700">
                   <div className="flex flex-wrap gap-1 bg-neutral-950 p-1 rounded-lg">
-                     <button onClick={() => applyAutoColors()} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-colors border border-indigo-500/30">Auto Sync</button>
-                     <button onClick={applyRandomPalette} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white transition-colors border border-emerald-500/30">Random</button>
+                    <button onClick={() => applyAutoColors()} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-all duration-200 border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">Auto Sync</button>
+                    <button onClick={applyRandomPalette} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white transition-all duration-200 border border-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500">Random</button>
                   </div>
-                  
+
                   <div className="flex justify-around py-2">
                     {/* COLOR 1 */}
                     <div className="flex flex-col items-center gap-2">
-                        <input type="checkbox" checked={c1Active} onChange={(e) => setC1Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer" title="Toggle Main Color" />
-                        <input type="color" value={colors[0]} onChange={(e) => handleColorChange(0, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-transform hover:scale-110 ${!c1Active ? 'opacity-20 grayscale' : ''}`} />
+                      <input type="checkbox" checked={c1Active} onChange={(e) => setC1Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Toggle main color" title="Main Color" />
+                      <input type="color" value={colors[0]} onChange={(e) => handleColorChange(0, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 ${!c1Active ? 'opacity-20 grayscale' : ''}`} aria-label="Main color picker" />
                     </div>
                     {/* COLOR 2 */}
                     <div className="flex flex-col items-center gap-2">
-                        <input type="checkbox" checked={c2Active} onChange={(e) => setC2Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer" title="Toggle Secondary Color" />
-                        <input type="color" value={colors[1]} onChange={(e) => handleColorChange(1, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-transform hover:scale-110 ${!c2Active ? 'opacity-20 grayscale' : ''}`} />
+                      <input type="checkbox" checked={c2Active} onChange={(e) => setC2Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Toggle secondary color" title="Secondary Color" />
+                      <input type="color" value={colors[1]} onChange={(e) => handleColorChange(1, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 ${!c2Active ? 'opacity-20 grayscale' : ''}`} aria-label="Secondary color picker" />
                     </div>
                     {/* COLOR 3 */}
                     <div className="flex flex-col items-center gap-2">
-                        <input type="checkbox" checked={c3Active} onChange={(e) => setC3Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer" title="Toggle Accent Color" />
-                        <input type="color" value={colors[2]} onChange={(e) => handleColorChange(2, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-transform hover:scale-110 ${!c3Active ? 'opacity-20 grayscale' : ''}`} />
+                      <input type="checkbox" checked={c3Active} onChange={(e) => setC3Active(e.target.checked)} className="w-3 h-3 rounded border-neutral-700 text-red-500 bg-neutral-950 cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500" aria-label="Toggle accent color" title="Accent Color" />
+                      <input type="color" value={colors[2]} onChange={(e) => handleColorChange(2, e.target.value)} className={`w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0 shadow-sm transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500 ${!c3Active ? 'opacity-20 grayscale' : ''}`} aria-label="Accent color picker" />
                     </div>
                   </div>
                 </div>
@@ -1216,42 +1225,46 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                   <span className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-500">7</span>
                   Layout & Personalization
                 </label>
-                
+
                 <select value={backgroundStyle} onChange={(e) => setBackgroundStyle(e.target.value)}
-                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl p-3 mb-2">
+                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl p-3 mb-2 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
                   {Object.keys(BACKGROUND_STYLES).map(bg => <option key={bg} value={bg}>{bg}</option>)}
                 </select>
 
                 <div className="flex gap-2">
-                    <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
-                    className="w-1/2 bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-bold rounded-xl p-2.5">
+                  <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
+                    className="w-1/2 bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-bold rounded-xl p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-200 hover:border-orange-500">
                     {Object.keys(ASPECT_RATIOS).map(ar => <option key={ar} value={ar}>{ar.split(' ')[0]}</option>)}
-                    </select>
-                    
-                    {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' && (
+                  </select>
+
+                  {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' && (
                     <select value={layoutPos} onChange={(e) => setLayoutPos(e.target.value)}
-                        className="w-1/2 bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
-                        <option value="Left">Model Left</option>
-                        <option value="Center">Model Center</option>
-                        <option value="Right">Model Right</option>
+                      className="w-1/2 bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
+                      <option value="Left">Model Left</option>
+                      <option value="Center">Model Center</option>
+                      <option value="Right">Model Right</option>
                     </select>
-                    )}
+                  )}
                 </div>
 
                 {productType === 'Apparel' && !ASPECT_RATIOS[aspectRatio].productOnly && (
                   <select value={gender} onChange={(e) => setGender(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-red-400 text-xs font-bold rounded-xl p-2.5 mt-2">
+                    className="w-full bg-neutral-900 border border-neutral-800 text-red-400 text-xs font-bold rounded-xl p-2.5 mt-2 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
                     {GENDERS.map(g => <option key={g} value={g}>Model: {g}</option>)}
                   </select>
                 )}
 
                 <div className="flex gap-2 mt-2">
-                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all ${useUploadedDesign ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`}>
+                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all duration-200 ${
+                    useUploadedDesign ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:border-neutral-700'
+                  } focus-within:ring-2 focus-within:ring-indigo-500`}>
                     <input type="checkbox" checked={useUploadedDesign} onChange={(e) => setUseUploadedDesign(e.target.checked)} className="sr-only" />
                     <UploadCloud className="w-3 h-3" /> <span className="text-[9px] font-bold">Sync Image</span>
                   </label>
 
-                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all ${strictFaceMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`} title="Lock facial identity using --cref">
+                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all duration-200 ${
+                    strictFaceMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:border-neutral-700'
+                  } focus-within:ring-2 focus-within:ring-emerald-500`} title="Lock facial identity using --cref">
                     <input type="checkbox" checked={strictFaceMode} onChange={(e) => setStrictFaceMode(e.target.checked)} className="sr-only" />
                     <Camera className="w-3 h-3" /> <span className="text-[9px] font-bold">Strict Face (--cref)</span>
                   </label>
@@ -1260,33 +1273,33 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
             </div>
 
             <button onClick={generatePrompt}
-              className="w-full py-4 mt-2 bg-gradient-to-r from-red-600 to-orange-500 text-white hover:opacity-90 rounded-2xl font-black flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-[0_0_20px_rgba(239,68,68,0.3)] text-sm tracking-widest">
+              className="w-full py-4 mt-2 bg-gradient-to-r from-red-600 to-orange-500 text-white hover:opacity-90 rounded-2xl font-black flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] text-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-4 focus:ring-offset-neutral-900">
               <Wand2 className="w-4 h-4" /> GENERATE MASTERPIECE
             </button>
           </div>
 
           {/* RIGHT PANEL: RESULT */}
           <div className="lg:col-span-4 h-full flex flex-col gap-4">
-            <div className="bg-[#0a0a0a] border border-neutral-800 p-4 rounded-3xl shadow-2xl flex flex-col items-center justify-center min-h-[250px]">
-               {renderVisualPreview()}
+            <div className="bg-[#0a0a0a] border border-neutral-800 p-4 rounded-3xl shadow-2xl flex flex-col items-center justify-center min-h-[250px] transition-all duration-300 hover:border-neutral-700 hover:shadow-xl">
+              {renderVisualPreview()}
             </div>
 
-            <div className="bg-[#0a0a0a] border border-neutral-800 p-4 rounded-3xl shadow-2xl flex-1 flex flex-col relative overflow-hidden">
+            <div className="bg-[#0a0a0a] border border-neutral-800 p-4 rounded-3xl shadow-2xl flex-1 flex flex-col relative overflow-hidden transition-all duration-300 hover:border-neutral-700">
               <div className="flex items-center justify-between mb-3">
                 <label className="text-[11px] font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
                   <Sparkles className="w-3 h-3" /> RESULT
                 </label>
                 {prompt && (
                   <button onClick={copyToClipboard}
-                    className="text-[9px] font-bold flex items-center gap-1 bg-neutral-800 text-white border border-neutral-700 px-3 py-1.5 rounded-lg hover:text-red-400 transition-colors">
+                    className="text-[9px] font-bold flex items-center gap-1 bg-neutral-800 text-white border border-neutral-700 px-3 py-1.5 rounded-lg hover:text-red-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500">
                     {copied ? <CheckCircle2 className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
                     {copied ? 'COPIED' : 'COPY'}
                   </button>
                 )}
               </div>
-              
+
               {prompt ? (
-                <div className="flex-1 bg-black border border-neutral-800 rounded-2xl p-3 font-mono text-[10px] text-neutral-300 leading-relaxed overflow-y-auto custom-scrollbar shadow-inner relative whitespace-pre-wrap">
+                <div className="flex-1 bg-black border border-neutral-800 rounded-2xl p-3 font-mono text-[10px] text-neutral-300 leading-relaxed overflow-y-auto custom-scrollbar shadow-inner relative whitespace-pre-wrap transition-all duration-300 animate-in fade-in">
                   {prompt}
                 </div>
               ) : (
@@ -1300,6 +1313,26 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
 
         </div>
       </div>
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #1a1a1a;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #ef4444;
+          border-radius: 10px;
+        }
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
