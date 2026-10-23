@@ -210,13 +210,15 @@ export const CATEGORY_DESIGN_DNA = {
 };
 
 export const FOOTWEAR_OPTIONS = {
-  toe: ["Preserve silhouette", "Rounded court toe", "Streamlined runner toe", "Squared fashion toe", "Reinforced trail toe"],
-  upper: ["Preserve silhouette", "Classic panelled upper", "Layered technical upper", "One-piece molded upper", "Engineered knit upper", "External cage construction"],
-  lacing: ["Preserve silhouette", "Standard laces", "Speed-lace toggle", "Hidden lacing", "Double-lace system", "Zip/shroud closure", "Slip-on construction"],
-  midsole: ["Preserve silhouette", "Classic cupsole", "Low-profile EVA", "Sculpted foam midsole", "Visible cushioning system", "Stacked platform midsole"],
-  outsole: ["Preserve silhouette", "Flat rubber outsole", "Gum outsole", "Lugged trail outsole", "Vibram-style outsole", "Segmented technical outsole"],
-  heel: ["Preserve silhouette", "Standard heel counter", "External heel clip", "Protective heel cage", "Extended sculpted heel", "Heel pull-tab utility"],
-  distress: ["Pristine / new", "Natural light wear", "Vintage worn-in", "Heavy distressed / aged"]
+  sole: [
+    "Preserve base sole",
+    "Clear / Translucent Sole",
+    "Gum Sole",
+    "Vibram / Lugged Sole",
+    "Platform / Stacked Sole",
+    "Visible Cushioning / Air-Gel Sole",
+    "Sculpted Technical Sole"
+  ]
 };
 
 export const COLLAB_SCOPE_OPTIONS = [

@@ -78,15 +78,7 @@ export function getAestheticProductDNA(aestheticName, productType) {
 
 export function normalizeComponents(components = []) {
   const clean = [...new Set(components.filter(Boolean).filter(x => !String(x).includes('None')))];
-  const warnings = [];
-  const soleSystems = clean.filter(x => /Clear Outsole|Gum Sole|Vibram Sole|Platform \/ Stacked Sole/i.test(x));
-  if (soleSystems.length > 2) {
-    warnings.push('Too many competing sole systems selected; keep no more than two structural sole ideas for a coherent product.');
-  }
-  if (clean.includes('Clear Outsole') && clean.includes('Gum Sole')) {
-    warnings.push('Clear Outsole and Gum Sole are visually competing outsole treatments.');
-  }
-  return { components: clean, warnings };
+  return { components: clean, warnings: [] };
 }
 
 function formatColors(colors = []) {
@@ -113,11 +105,11 @@ function collabDescription(settings) {
 
 function referenceInstructions(settings, productOnly) {
   const parts = [];
-  if (settings.externalDesignReference) {
-    parts.push('If a product/design reference image is attached in the target image generator, preserve its intended graphic placement and structural cues only where they do not conflict with the selected base silhouette.');
+  if (settings.useUploadedProductBase) {
+    parts.push('BASE PRODUCT REFERENCE: Use the uploaded product image as the structural authority. Preserve its recognizable overall silhouette, proportions, major panel geometry, sole/base profile, closure and functional shape. Apply the selected brand, collaboration, materials, colors and graphics as redesign layers without replacing the base product shape.');
   }
   if (settings.externalFaceReference && !productOnly) {
-    parts.push('If a human reference image is attached in the target image generator, preserve that model identity and facial structure while allowing wardrobe, pose, lighting and background to follow this design brief.');
+    parts.push('MODEL REFERENCE: preserve the referenced model identity and facial structure while allowing styling, pose, lighting and background to follow this design brief.');
   }
   return parts;
 }
@@ -140,41 +132,21 @@ export function buildDesignSpec(settings) {
     ? (aestheticTheme?.background ? `Setting & decor: ${aestheticTheme.background}.` : FALLBACK_BG)
     : (BACKGROUND_STYLES[settings.backgroundStyle] || FALLBACK_BG);
 
+  const useUploadedProductBase = !!settings.useUploadedProductBase;
   const footwear = settings.productType === 'Footwear' ? {
-    toe: settings.footwear?.toe || 'Preserve silhouette',
-    upper: settings.footwear?.upper || 'Preserve silhouette',
-    lacing: settings.footwear?.lacing || 'Preserve silhouette',
-    midsole: settings.footwear?.midsole || 'Preserve silhouette',
-    outsole: settings.footwear?.outsole || 'Preserve silhouette',
-    heel: settings.footwear?.heel || 'Preserve silhouette',
-    distress: settings.footwear?.distress || 'Pristine / new'
+    sole: settings.footwear?.sole || 'Preserve base sole'
   } : null;
 
   const warnings = [...componentResult.warnings];
   if (settings.whiteLabel && scopes.includes('branding')) warnings.push('White-label mode overrides collab/brand branding scope.');
   if (settings.whiteLabel && scopes.includes('typography')) warnings.push('White-label mode overrides collab typography/text scope.');
-  if (settings.productType === 'Footwear' && footwear?.lacing === 'Slip-on construction' && /Air Force|Dunk|Jordan 1|Blazer|Chuck|Old Skool/i.test(base.name)) {
-    warnings.push('Slip-on construction is a strong departure from the selected lace-based heritage silhouette.');
+  if (settings.productType === 'Footwear' && /Platform \/ Stacked/i.test(footwear?.sole || '') && settings.fitStyle === 'Sleek / Aerodynamic') {
+    warnings.push('Platform / stacked sole conflicts with a sleek/aerodynamic fit direction.');
   }
-  if (settings.productType === 'Footwear' && footwear?.midsole === 'Stacked platform midsole' && settings.fitStyle === 'Sleek / Aerodynamic') {
-    warnings.push('Stacked platform midsole conflicts with a sleek/aerodynamic fit direction.');
+  if (settings.productType === 'Footwear' && /Vibram|Lugged/i.test(footwear?.sole || '') && settings.fitStyle === 'Sleek / Aerodynamic') {
+    warnings.push('Heavy lugged sole conflicts with a sleek/aerodynamic fit direction.');
   }
-  if (settings.productType === 'Footwear' && /Lugged trail|Vibram/i.test(footwear?.outsole || '') && settings.fitStyle === 'Sleek / Aerodynamic') {
-    warnings.push('Heavy trail/outdoor outsole conflicts with a sleek/aerodynamic fit direction.');
-  }
-  if (settings.productType === 'Footwear' && componentResult.components.includes('Gum Sole') && footwear?.outsole && footwear.outsole !== 'Preserve silhouette' && !/Gum/i.test(footwear.outsole)) {
-    warnings.push('Gum Sole component conflicts with the explicit footwear outsole override.');
-  }
-  if (settings.productType === 'Footwear' && componentResult.components.includes('Vibram Sole') && footwear?.outsole && footwear.outsole !== 'Preserve silhouette' && !/Vibram/i.test(footwear.outsole)) {
-    warnings.push('Vibram Sole component conflicts with the explicit footwear outsole override.');
-  }
-  if (settings.productType === 'Footwear' && componentResult.components.includes('Platform / Stacked Sole') && footwear?.midsole && footwear.midsole !== 'Preserve silhouette' && !/Stacked platform/i.test(footwear.midsole)) {
-    warnings.push('Platform / Stacked Sole component conflicts with the explicit midsole override.');
-  }
-  if (settings.productType === 'Footwear' && componentResult.components.includes('Zipper System / Zip-Up Shroud') && footwear?.lacing && footwear.lacing !== 'Preserve silhouette' && !/Zip\/shroud/i.test(footwear.lacing)) {
-    warnings.push('Zipper component conflicts with the explicit lacing/closure override.');
-  }
-  if (settings.collabStrength >= 80 && scopes.includes('construction') && !String(base.name).startsWith('Generic ')) {
+  if (settings.collabStrength >= 80 && scopes.includes('construction') && !useUploadedProductBase && !String(base.name).startsWith('Generic ')) {
     warnings.push('Dominant collab + Construction scope may compete with the named silhouette. The silhouette remains structural authority.');
   }
   if (settings.whiteLabel && BRAND_PATTERNS[settings.brand]?.includes(settings.selectedPattern)) {
@@ -182,6 +154,9 @@ export function buildDesignSpec(settings) {
   }
   if (productOnly && settings.externalFaceReference) {
     warnings.push('External Face Reference is ignored in product-only layouts because no model is rendered.');
+  }
+  if (useUploadedProductBase && !settings.uploadedProductName) {
+    warnings.push('Uploaded Product Base is active. Attach the same product image in the target image generator when using the prompt.');
   }
 
   return {
@@ -192,7 +167,11 @@ export function buildDesignSpec(settings) {
     brandStyle: FASHION_CATEGORIES[settings.category]?.description || '',
     brandDNA,
     coBrandDNA,
-    silhouette: { name: base.name, traits: base.traits },
+    baseSource: useUploadedProductBase ? 'uploaded' : 'database',
+    silhouette: useUploadedProductBase
+      ? { name: 'Uploaded Product Reference', traits: 'the exact visible structural form of the uploaded product' }
+      : { name: base.name, traits: base.traits },
+    databaseSilhouette: { name: base.name, traits: base.traits },
     materials: settings.materials || [],
     fitStyle: settings.fitStyle,
     designStyle: settings.designStyle || 'Balanced / Product-led',
@@ -233,41 +212,49 @@ export function buildDesignSpec(settings) {
   };
 }
 
-function footwearArchitecture(spec) {
-  if (!spec.footwear) return '';
-  const f = spec.footwear;
-  return `Footwear architecture: toe=${f.toe}; upper=${f.upper}; closure=${f.lacing}; midsole=${f.midsole}; outsole=${f.outsole}; heel=${f.heel}; finish=${f.distress}.`;
+function fusionLabel(spec) {
+  return [spec.brand, spec.coBrand !== 'None' ? spec.coBrand : '', spec.collab.name]
+    .filter(Boolean)
+    .join(' x ');
 }
 
-function collabLine(spec) {
-  if (!spec.collab.name) return 'Collaboration layer: none.';
-  const scope = spec.collab.scopes.length ? spec.collab.scopes.join(', ') : 'general aesthetic cues';
-  return `Collaboration layer: ${spec.collab.name}, ${spec.collab.strength}% influence, scoped to ${scope}. Use ${spec.collab.description}. The collab must modify only the selected scopes; it must not erase the base silhouette.`;
+function conceptLine(spec) {
+  const baseText = spec.baseSource === 'uploaded'
+    ? 'the exact structural shape shown in the uploaded product reference'
+    : `${spec.silhouette.name} (${spec.silhouette.traits})`;
+  const style = spec.brandStyle ? ` (${spec.category} style: ${spec.brandStyle})` : '';
+  return `Concept: A fashion crossover ${spec.productType.toLowerCase()} design combining ${fusionLabel(spec)}${style} with the structural silhouette of ${baseText}.`;
 }
 
-function brandHierarchy(spec) {
-  const co = spec.coBrand && spec.coBrand !== 'None'
-    ? ` Secondary brand DNA: ${spec.coBrand} — ${spec.coBrandDNA?.designLanguage || 'secondary brand cues'}.`
-    : '';
-  return `Design hierarchy: ${spec.silhouette.name} is the structural authority. Preserve its recognizable proportion, stance and core geometry. Primary ${spec.brand} DNA: ${spec.brandDNA.designLanguage}; construction: ${spec.brandDNA.construction}; branding logic: ${spec.brandDNA.branding}.${co}`;
+function collabInjectionLine(spec) {
+  if (!spec.collab.name) return '';
+  if (spec.collab.type === 'IP') {
+    return `Pop-Culture Injection: themed around ${spec.collab.name}, translating its recognizable colorways, motifs and graphic language into the product design without turning the product into a costume prop.`;
+  }
+  return `Aesthetic Injection: ${spec.collab.description}.`;
 }
 
 function materialLine(spec) {
   const mats = spec.materials.length ? spec.materials.join(' + ') : 'context-appropriate materials';
-  return `Materials: ${mats}. Respect realistic thickness, stitching, seams, flex points, joins and material behavior.`;
+  return `Primary Materials: ${mats}.`;
 }
 
 function componentLine(spec) {
-  return spec.components.length ? `Structural additions: ${spec.components.join('; ')}.` : 'Structural additions: none beyond the selected silhouette and anatomy controls.';
+  return spec.components.length ? `Structural Modification: ${spec.components.join(' + ')}.` : '';
+}
+
+function soleLine(spec) {
+  if (!spec.footwear || !spec.footwear.sole || spec.footwear.sole === 'Preserve base sole') return '';
+  return `Sole Modification: ${spec.footwear.sole}.`;
 }
 
 function brandingLine(spec) {
-  if (spec.whiteLabel) return 'Branding policy: WHITE LABEL. No logos, trademarks, signature typography or brand marks. Retain only non-logo structural design language.';
-  return 'Branding policy: branding may appear only in plausible physical placement on the product; no floating or decorative random logos.';
+  if (spec.whiteLabel) return 'Branding: white-label treatment, no visible logos or signature brand marks.';
+  return 'Feature signature branding prominently, integrated physically into the product design.';
 }
 
 function consistencyLock(spec) {
-  return `PRODUCT CONSISTENCY LOCK: every view must depict the exact same ${spec.productType.toLowerCase()} design. Keep identical silhouette, proportions, panel geometry, material zoning, color blocking, closures, sole/base construction, hardware and branding placement across all panels. No redesign, mutation, color drift or material drift between views.`;
+  return `Consistency: keep the exact same ${spec.productType.toLowerCase()} design, silhouette, materials, color blocking and branding across every panel.`;
 }
 
 function modelDescription(spec) {
@@ -280,65 +267,69 @@ function productViews(spec) {
   const model = modelDescription(spec);
   if (spec.productType === 'Footwear') {
     return {
-      hero: 'Lateral outer-side product view at shoe level, clean perspective, entire footwear visible with no perspective distortion hiding the silhouette.',
-      detail: 'True outsole bottom view showing tread geometry, rubber zones and sole construction.',
-      model: `On-foot fashion lookbook view of a ${model}, framed primarily from knee-down so the exact footwear remains the hero.`,
-      extra: 'True top-down dorsal view showing toe shape, eyestay/closure, tongue and material zoning.'
+      hero: 'Lateral outer-side profile product view, showing the complete footwear silhouette clearly.',
+      detail: 'Alternative top-down or outsole/detail view showing tread, material texture and construction.',
+      model: `Dynamic lookbook shot focused on a ${model}'s feet wearing the exact same footwear design.`,
+      extra: 'Alternative three-quarter footwear view showing the same design and sole profile.'
     };
   }
   if (spec.productType === 'Apparel') {
     return {
-      hero: 'Front garment view / clean editorial flat lay showing full cut and tailoring.',
-      detail: 'Back garment view showing rear construction, seams and details.',
-      model: `Full-body lookbook view of a ${model} wearing the exact same garment design.`,
-      extra: 'Three-quarter detail view showing material, hardware and construction.'
+      hero: 'Front-view flat lay / tech-pack presentation showing the complete garment cut and tailoring.',
+      detail: 'Back-view flat lay / tech-pack presentation showing rear tailoring and construction.',
+      model: `Full-body fashion lookbook shot of a ${model} wearing the exact same garment.`,
+      extra: 'Three-quarter garment detail view showing material and construction.'
     };
   }
   return {
-    hero: 'Front product view showing full accessory structure and proportions.',
-    detail: 'Rear or underside product view showing functional construction.',
-    model: `Lookbook view of a ${model} naturally carrying or interacting with the exact same accessory.`,
-    extra: 'Three-quarter detail view showing hardware, compartments and material transitions.'
+    hero: 'Front-facing detailed product shot showing the complete accessory shape and structure.',
+    detail: 'Alternative-angle product shot showing side, back, hardware or functional structural details.',
+    model: `Fashion lookbook shot of a ${model} carrying, displaying or interacting naturally with the exact same accessory.`,
+    extra: 'Three-quarter accessory product view showing material, hardware and functional details.'
   };
 }
 
 function coreBrief(spec) {
-  return [
-    `PRODUCT: ${spec.productType} — ${spec.silhouette.name}.`,
-    brandHierarchy(spec),
-    `Base silhouette traits: ${spec.silhouette.traits}.`,
-    collabLine(spec),
-    `Aesthetic direction: ${spec.aesthetic.name}. ${spec.aesthetic.productDNA}`,
+  const lines = [
+    conceptLine(spec),
+    collabInjectionLine(spec),
+    spec.aesthetic.name !== 'None (Standard Fashion)' ? `Aesthetic Core: ${spec.aesthetic.name}. ${spec.aesthetic.productDNA}` : '',
     materialLine(spec),
-    `Fit / proportion direction: ${spec.fitStyle}.`,
-    `Design approach: ${spec.designStyle}.`,
-    footwearArchitecture(spec),
+    `Design Fit/Structure: ${spec.fitStyle}.`,
     componentLine(spec),
-    spec.pattern && spec.pattern !== 'Solid Color (No Pattern)' ? `Surface pattern: ${spec.pattern}; adapt it to real panel geometry rather than pasting it uniformly over every surface.` : 'Surface pattern: solid / material-led unless otherwise specified.',
+    soleLine(spec),
+    `Design Approach: ${spec.designStyle}.`,
+    spec.pattern && spec.pattern !== 'Solid Color (No Pattern)' ? `Pattern / Surface Detail: ${spec.pattern}.` : '',
     spec.colorText,
-    spec.aesthetic.lighting ? `Lighting direction: ${spec.aesthetic.lighting}; keep product geometry and colors readable.` : '',
     brandingLine(spec),
     consistencyLock(spec),
     ...spec.references
-  ].filter(Boolean).join('\n');
+  ];
+  return lines.filter(Boolean).join('\n');
 }
 
 function compositePrompt(spec) {
   const views = productViews(spec);
+  let intro;
   let panels;
+
   if (spec.presentation.layoutType === 'diptych-horizontal') {
-    panels = `DIPTYCH PRODUCT SHEET, two equal panels.\nLEFT — ${views.hero}\nRIGHT — ${views.detail}`;
+    intro = 'A photorealistic product editorial photography, diptych layout split cleanly into 2 panels.';
+    panels = `Left Panel: ${views.hero}\nRight Panel: ${views.detail}`;
   } else if (spec.presentation.layoutType === 'diptych-vertical') {
-    panels = `VERTICAL DIPTYCH, two stacked panels.\nTOP — ${views.model}\nBOTTOM — ${views.hero}`;
+    intro = 'A photorealistic fashion editorial photography, vertical diptych split into 2 stacked panels.';
+    panels = `Top Panel: ${views.model}\nBottom Panel: ${views.hero}`;
   } else {
+    intro = 'A photorealistic product and fashion editorial photography, triptych layout split cleanly into 3 vertical panels.';
     const order = spec.presentation.layoutPos === 'Left'
       ? [views.model, views.hero, views.detail]
       : spec.presentation.layoutPos === 'Right'
         ? [views.hero, views.detail, views.model]
         : [views.hero, views.model, views.detail];
-    panels = `TRIPTYCH PRODUCT SHEET, exactly three clean vertical panels with equal visual weight.\nLEFT — ${order[0]}\nCENTER — ${order[1]}\nRIGHT — ${order[2]}`;
+    panels = `Left Panel: ${order[0]}\nCenter Panel: ${order[1]}\nRight Panel: ${order[2]}`;
   }
-  return `${coreBrief(spec)}\n\nPRESENTATION:\n${panels}\n${spec.model.background}\nLighting should reveal real material texture and construction without changing the product between panels. Avoid fake UI, captions, borders inside panels, floating text and watermark artifacts.`;
+
+  return `${intro}\n${panels}\n\n${coreBrief(spec)}\n\n${spec.model.background}\nStyle details: photorealistic material textures, clean fashion/product editorial photography, believable construction and realistic studio or environmental lighting.`;
 }
 
 function panelPack(spec) {
@@ -349,14 +340,14 @@ function panelPack(spec) {
     ['02 ON-BODY / ON-FOOT', views.model],
     ['03 STRUCTURAL DETAIL', views.detail],
     ['04 TOP / THREE-QUARTER', views.extra]
-  ].map(([title,view])=>`### ${title}\n${base}\n\nVIEW: ${view}\n${spec.model.background}\nGenerate only this single view. Do not add a collage or extra panels.`).join('\n\n---\n\n');
+  ].map(([title,view])=>`### ${title}\n${base}\n\nVIEW: ${view}\n${spec.model.background}\nGenerate only this single view, using the exact same product design described above.`).join('\n\n---\n\n');
 }
 
 function negativeText(spec) {
   const negatives = [
     'design mutation between views',
     'different colorway between panels',
-    'different lacing or hardware between panels',
+    'different product structure between panels',
     'impossible material transitions',
     'floating logos',
     'random typography',

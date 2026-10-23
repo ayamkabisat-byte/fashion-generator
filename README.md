@@ -1,6 +1,6 @@
 # Fashion Design Lab Ultimate
 
-A React/Vite prompt-design web app for fashion products, footwear, and accessories. The app combines archival product silhouettes, brand design DNA, collaboration concepts, materials, aesthetics, color logic, product anatomy, and presentation rules into a canonical design brief before formatting it for an image generator.
+A React/Vite prompt-design web app for fashion products, footwear, and accessories. The app keeps the user-facing workflow direct—brand/collab, base shape, material, fit, visible structural modifiers, aesthetic, color and layout—while richer brand/design logic stays inside the engine.
 
 ## Why this version exists
 
@@ -24,24 +24,22 @@ Current protected catalog:
 4. Control **collab influence** (20/40/60/80%) and its scope: color, motif, material, construction, typography, branding.
 5. Choose a named base silhouette.
 6. Choose up to three compatible materials.
-7. Adjust fit/structure and optional footwear anatomy.
+7. Adjust fit/structure, obvious structural add-ons, and an optional footwear sole modifier.
 8. Apply aesthetic, pattern, and intelligent palette logic.
 9. Choose layout, model, output mode, and target generator.
 10. Generate a canonical prompt with a **Product Consistency Lock**.
 
-## Footwear anatomy
+## Footwear structure
 
-Footwear can override individual layers without discarding the selected base silhouette:
+Footwear intentionally avoids a long anatomy checklist. The selected named silhouette or uploaded product image remains the structural base.
 
-- toe
-- upper construction
-- lacing / closure
-- midsole
-- outsole
-- heel
-- distress / finish
+The UI exposes only:
 
-Leaving an option at **Preserve silhouette** keeps the named model authoritative.
+- **Fit / Structure**
+- up to **two obvious structural add-ons** such as ankle straps, zip shrouds, external cages or utility loops
+- **Sole Modifier**, because a sole change can visibly alter the entire footwear silhouette
+
+Leaving Sole Modifier on **Preserve base sole** keeps the original sole profile.
 
 ## Collaboration engine
 
@@ -65,8 +63,8 @@ This makes concepts such as “Air Force 1 × Pharrell” controllable: the AF1 
 Key behavior:
 
 - the 3-panel triptych remains the dominant random layout; diptych/product-only and vertical layouts still appear
-- a footwear randomization normally changes only 0–2 anatomy layers; 3-layer mutations are intentionally rare
-- component choices avoid duplicating explicit outsole, platform, or zipper anatomy
+- footwear randomization changes only the sole and/or a small number of obvious structural add-ons
+- the engine no longer randomizes toe, upper, lacing, midsole, heel and distress as separate user-facing anatomy controls
 - collab colors are used only when the **Color** collab scope is active
 - brand, collaboration, aesthetic, and IP color DNA remain preferred over arbitrary palettes
 - backgrounds are biased toward the selected aesthetic instead of being fully unrelated
@@ -119,12 +117,24 @@ Universal output contains no model-specific flags. Midjourney output adds aspect
 
 ## Reference behavior
 
-The web app does not pretend to upload or bind an image when it cannot. The two reference toggles only add downstream instructions:
+### Uploaded Product Base
 
-- **External Design Ref**
-- **External Face Ref**
+A real image can be selected locally with **Use Uploaded Product as Base**. When enabled, the uploaded product becomes the structural authority instead of a database silhouette.
 
-Attach the corresponding image in the image generator you actually use.
+This is intended for:
+
+- local footwear brands
+- niche or obscure products
+- custom products
+- products whose shape the target image model may not recognize reliably by name
+
+The generated prompt tells the target model to preserve the uploaded product's overall silhouette, proportions, major panel geometry, sole/base profile, closure and functional shape while applying the selected brand, collaboration, materials, colors and graphics as redesign layers.
+
+The local image is used as an in-app reference preview only. Attach the same image again in the target image generator together with the generated prompt.
+
+### Face Reference
+
+**External Face Reference** remains available for lookbook/model shots. Attach the matching person image in the downstream image generator.
 
 ## Project structure
 
