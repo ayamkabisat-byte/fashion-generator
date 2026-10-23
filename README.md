@@ -57,6 +57,42 @@ Collaboration is no longer a single adjective injection. The generator separates
 
 This makes concepts such as “Air Force 1 × Pharrell” controllable: the AF1 can stay structurally authoritative while only selected Pharrell/Human Race cues are injected.
 
+
+## Smart Random + parameter locks
+
+**Smart Randomize** is compatibility-aware rather than pure chaos. It randomizes design parameters in dependency order and then resolves known conflicts.
+
+Key behavior:
+
+- the 3-panel triptych remains the dominant random layout; diptych/product-only and vertical layouts still appear
+- a footwear randomization normally changes only 0–2 anatomy layers; 3-layer mutations are intentionally rare
+- component choices avoid duplicating explicit outsole, platform, or zipper anatomy
+- collab colors are used only when the **Color** collab scope is active
+- brand, collaboration, aesthetic, and IP color DNA remain preferred over arbitrary palettes
+- backgrounds are biased toward the selected aesthetic instead of being fully unrelated
+- locked materials constrain silhouette selection so the selected product remains materially plausible
+
+The **Smart Random Locks** bar can lock:
+
+- Product Type
+- Brand + Category
+- Co-Brand
+- Collaboration
+- Base Silhouette
+- Materials
+- Fit + Structure
+- Aesthetic
+- Design Approach
+- Pattern
+- Colors
+- Model
+- Background
+- 2/3 Panel Layout
+
+Locks affect **Smart Randomize only**. Manual controls remain editable.
+
+Some locks imply dependency locks during randomization. For example, locking a Base Silhouette also pins Product Type and Brand + Category; locking Fit + Structure or Materials pins Product Type. These derived locks are reported by the Smart Random resolver in the UI.
+
 ## Output modes
 
 ### Composite Sheet
