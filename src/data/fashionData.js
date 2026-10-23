@@ -947,19 +947,32 @@ export const DESIGN_COMPONENTS = {
 };
 
 export const DESIGN_STYLES = {
-  "Minimalist / Clean": "Sleek, minimalist modern interpretation, solid colors, NO busy patterns.",
-  "Authentic & Ornate": "Rich motifs, heavy detailed embroidery, bold graphics.",
-  "Techwear / Tactical": "Futuristic utility, tactical straps, cargo pockets."
+  "Minimalist / Clean": "Reduce the concept to essential geometry, controlled seams, disciplined color blocking and minimal decoration.",
+  "Authentic & Ornate": "Use rich motifs, crafted details, embroidery or graphic treatment while keeping construction believable.",
+  "Techwear / Tactical": "Prioritize futuristic utility, modular hardware, straps, protective structures and functional technical detailing.",
+  "Heritage Rework": "Respect archival proportions and recognizable heritage cues, then update materials, construction or detailing without losing the original identity.",
+  "Deconstructed / Inside-Out": "Expose normally hidden construction, offset panels, raw edges, displaced seams and deliberate assembly logic without becoming physically impossible.",
+  "Performance Engineering": "Make function drive form: ventilation, support, flex zones, cushioning, grip, lightweight structures and ergonomic material placement.",
+  "Sculptural / Avant-Garde": "Push volume, proportion and form into a strong fashion-object statement while preserving wearability and product logic.",
+  "Material Experiment": "Make unusual but plausible material contrast the hero; clearly zone each material according to structural need.",
+  "Quiet Luxury": "Use premium materials, precise finishing, restrained branding and sophisticated proportions with minimal visual noise.",
+  "Playful / Pop": "Use bold color blocking, expressive motifs and surprising details while retaining a coherent product silhouette."
 };
 
 export const BACKGROUND_STYLES = {
   "Auto (Match Aesthetic)": "AUTO",
-  "Clean Studio": "Clean seamless white studio background.",
-  "Urban / Street": "Urban city street background, dynamic neon lighting.",
-  "White Sand Beach": "Beautiful white sand beach, clear blue sky, tropical aesthetic."
+  "Clean Studio": "Clean seamless white studio background with neutral product lighting.",
+  "Soft Gray Studio": "Soft neutral gray cyclorama studio with controlled realistic shadows.",
+  "Industrial Concrete": "Raw concrete industrial studio with subtle texture and utilitarian atmosphere.",
+  "Brutalist Gallery": "Minimal brutalist gallery architecture, large concrete planes and directional editorial light.",
+  "Urban / Street": "Lived-in urban street background with believable ambient city light.",
+  "Luxury Showroom": "Refined contemporary showroom with premium but restrained architectural materials.",
+  "White Sand Beach": "White sand beach with clear daylight and restrained resort styling.",
+  "Outdoor Trail": "Technical outdoor trail environment with natural terrain, rock and practical daylight.",
+  "Night Direct Flash": "Dark urban or indoor nightlife environment photographed with hard direct on-camera flash."
 };
 
-export const GENDERS = ['Female', 'Female (with Hijab)', 'Female (Plus Size)', 'Male', 'Androgynous'];
+export const GENDERS = ['Female', 'Female (with Hijab)', 'Female (Plus Size)', 'Male', 'Male (Plus Size)', 'Androgynous'];
 export const ASPECT_RATIOS = {
   "16:9 (Desktop/Landscape)": { ratio: "--ar 16:9", layoutType: "triptych", productOnly: false },
   "16:9 (Diptych - Product Only)": { ratio: "--ar 16:9", layoutType: "diptych-horizontal", productOnly: true },
