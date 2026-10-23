@@ -3,7 +3,8 @@ import {
   ASPECT_RATIOS,
   BACKGROUND_STYLES,
   COLLAB_ARTISTS,
-  FASHION_CATEGORIES
+  FASHION_CATEGORIES,
+  BRAND_PATTERNS
 } from '../data/fashionData.js';
 import {
   BRAND_DESIGN_DNA,
@@ -156,6 +157,30 @@ export function buildDesignSpec(settings) {
   }
   if (settings.productType === 'Footwear' && footwear?.midsole === 'Stacked platform midsole' && settings.fitStyle === 'Sleek / Aerodynamic') {
     warnings.push('Stacked platform midsole conflicts with a sleek/aerodynamic fit direction.');
+  }
+  if (settings.productType === 'Footwear' && /Lugged trail|Vibram/i.test(footwear?.outsole || '') && settings.fitStyle === 'Sleek / Aerodynamic') {
+    warnings.push('Heavy trail/outdoor outsole conflicts with a sleek/aerodynamic fit direction.');
+  }
+  if (settings.productType === 'Footwear' && componentResult.components.includes('Gum Sole') && footwear?.outsole && footwear.outsole !== 'Preserve silhouette' && !/Gum/i.test(footwear.outsole)) {
+    warnings.push('Gum Sole component conflicts with the explicit footwear outsole override.');
+  }
+  if (settings.productType === 'Footwear' && componentResult.components.includes('Vibram Sole') && footwear?.outsole && footwear.outsole !== 'Preserve silhouette' && !/Vibram/i.test(footwear.outsole)) {
+    warnings.push('Vibram Sole component conflicts with the explicit footwear outsole override.');
+  }
+  if (settings.productType === 'Footwear' && componentResult.components.includes('Platform / Stacked Sole') && footwear?.midsole && footwear.midsole !== 'Preserve silhouette' && !/Stacked platform/i.test(footwear.midsole)) {
+    warnings.push('Platform / Stacked Sole component conflicts with the explicit midsole override.');
+  }
+  if (settings.productType === 'Footwear' && componentResult.components.includes('Zipper System / Zip-Up Shroud') && footwear?.lacing && footwear.lacing !== 'Preserve silhouette' && !/Zip\/shroud/i.test(footwear.lacing)) {
+    warnings.push('Zipper component conflicts with the explicit lacing/closure override.');
+  }
+  if (settings.collabStrength >= 80 && scopes.includes('construction') && !String(base.name).startsWith('Generic ')) {
+    warnings.push('Dominant collab + Construction scope may compete with the named silhouette. The silhouette remains structural authority.');
+  }
+  if (settings.whiteLabel && BRAND_PATTERNS[settings.brand]?.includes(settings.selectedPattern)) {
+    warnings.push('White Label is active while a brand-specific iconic pattern is selected; the motif may still communicate brand identity.');
+  }
+  if (productOnly && settings.externalFaceReference) {
+    warnings.push('External Face Reference is ignored in product-only layouts because no model is rendered.');
   }
 
   return {
