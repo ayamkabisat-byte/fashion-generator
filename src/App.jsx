@@ -134,7 +134,6 @@ export default function App() {
     setFitStyle(DYNAMIC_FITS[type][0]);
     setDesignComponent1(DESIGN_COMPONENTS[type][0]);
     setDesignComponent2(DESIGN_COMPONENTS[type][0]);
-    setDesignComponent3(DESIGN_COMPONENTS[type][0]);
     setCustomShapeText('');
     const newMenuCat = type === 'Apparel' ? "Casual Wear" : "Iconic Silhouette";
     setMenuCategory(newMenuCat);
