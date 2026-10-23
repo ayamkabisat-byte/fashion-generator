@@ -137,3 +137,71 @@ test('triptych remains the dominant layout path in Smart Random', () => {
   assert.equal(next.aspectRatio, '16:9 (Desktop/Landscape)');
   assert.ok(['Left','Center','Right'].includes(next.layoutPos));
 });
+
+
+test('Colors lock suppresses randomly generated collab Color scope', () => {
+  const locks = {
+    ...EMPTY_RANDOM_LOCKS,
+    product:true,
+    brand:true,
+    silhouette:true,
+    materials:true,
+    structure:true,
+    aesthetic:true,
+    designStyle:true,
+    pattern:true,
+    colors:true,
+    model:true,
+    background:true,
+    layout:true,
+    coBrand:true
+  };
+  locks.collab = false;
+  const { next, notes } = createSmartRandomState(current, locks, constantRng(0.99));
+  assert.equal(next.collabScopes.color, false);
+  assert.ok(notes.some(x => /Color scope was disabled/.test(x)));
+});
+
+test('White Label suppresses randomized branding and typography collab scopes', () => {
+  const locks = {
+    ...EMPTY_RANDOM_LOCKS,
+    product:true,
+    brand:true,
+    silhouette:true,
+    materials:true,
+    structure:true,
+    aesthetic:true,
+    designStyle:true,
+    pattern:true,
+    colors:true,
+    model:true,
+    background:true,
+    layout:true,
+    coBrand:true
+  };
+  locks.collab = false;
+  const { next } = createSmartRandomState({ ...current, whiteLabel:true }, locks, constantRng(0.99));
+  assert.equal(next.collabScopes.branding, false);
+  assert.equal(next.collabScopes.typography, false);
+});
+
+test('External Face Reference prevents Smart Random from choosing product-only diptych', () => {
+  const locks = {
+    ...EMPTY_RANDOM_LOCKS,
+    product:true,
+    brand:true,
+    silhouette:true,
+    materials:true,
+    structure:true,
+    collab:true,
+    aesthetic:true,
+    designStyle:true,
+    pattern:true,
+    colors:true,
+    model:true,
+    background:true
+  };
+  locks.layout = false;
+  const { next } = createSmartRandomState({ ...current, externalFaceReference:true }, locks, constantRng(0.8));
+  assert.notEqual(next.aspectRatio, '16:9 (Diptych - Product Only)');
+});
