@@ -287,6 +287,7 @@ export default function App() {
       footwear,
       selectedAesthetic, designStyle, selectedPattern, backgroundStyle,
       gender, aspectRatio, layoutPos,
+      whiteLabel, externalFaceReference, externalDesignReference, outputMode, outputTarget,
       colorMode, colors, c1Active, c2Active, c3Active
     };
 
