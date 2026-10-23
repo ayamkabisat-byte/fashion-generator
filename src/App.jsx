@@ -928,11 +928,50 @@ export default function App() {
                   {Object.keys(BACKGROUND_STYLES).map(bg => <option key={bg} value={bg}>{bg}</option>)}
                 </select>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl border border-orange-500/20 bg-orange-500/5 p-3">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-orange-300">Layout</div>
+                      <div className="text-[9px] text-neutral-500">Choose 3-panel or 2-panel presentation.</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleRandomLock('layout')}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[9px] font-bold transition-all ${randomLocks.layout ? 'border-amber-500/50 bg-amber-500/15 text-amber-200' : 'border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-white'}`}
+                      title={randomLocks.layout ? 'Unlock layout from Smart Random' : 'Lock layout from Smart Random'}
+                    >
+                      {randomLocks.layout ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
+                      {randomLocks.layout ? 'Layout Locked' : 'Lock Layout'}
+                    </button>
+                  </div>
+
                   <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
-                    className="bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-bold rounded-xl p-2.5">
-                    {Object.keys(ASPECT_RATIOS).map(ar => <option key={ar} value={ar}>{ar.split(' ')[0]}</option>)}
+                    className="w-full bg-neutral-950 border border-orange-500/30 text-orange-200 text-xs font-bold rounded-xl p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    {Object.entries(ASPECT_RATIOS).map(([key,value]) => (
+                      <option key={key} value={key}>{value.label || key}</option>
+                    ))}
                   </select>
+
+                  {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' && (
+                    <div className="mt-2">
+                      <label className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">Model Position</label>
+                      <select value={layoutPos} onChange={(e) => setLayoutPos(e.target.value)}
+                        className="mt-1 w-full bg-neutral-950 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
+                        <option value="Left">Model Left · Product Center · Detail Right</option>
+                        <option value="Center">Product Left · Model Center · Detail Right</option>
+                        <option value="Right">Product Left · Detail Center · Model Right</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {randomLocks.layout && (
+                    <p className="mt-2 text-[9px] text-amber-300/80">
+                      Smart Random will preserve this layout{ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' ? ' and model position' : ''}.
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mt-2">
                   <select value={outputMode} onChange={(e)=>setOutputMode(e.target.value)}
                     className="bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
                     {OUTPUT_MODES.map(v=><option key={v}>{v}</option>)}
@@ -941,14 +980,6 @@ export default function App() {
                     className="bg-neutral-900 border border-neutral-800 text-cyan-300 text-xs rounded-xl p-2.5">
                     {OUTPUT_TARGETS.map(v=><option key={v}>{v}</option>)}
                   </select>
-                  {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' ? (
-                    <select value={layoutPos} onChange={(e) => setLayoutPos(e.target.value)}
-                      className="bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
-                      <option value="Left">Model Left</option>
-                      <option value="Center">Model Center</option>
-                      <option value="Right">Model Right</option>
-                    </select>
-                  ) : <div />}
                 </div>
 
                 {!ASPECT_RATIOS[aspectRatio].productOnly && (
