@@ -621,7 +621,7 @@ export default function App() {
             <div className="space-y-3">
               <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-[10px] text-red-500">2</span>
-                Base Inspiration ({productType})
+                Base Inspiration ({productType}) · {availableGarments.length} options
               </label>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -634,6 +634,12 @@ export default function App() {
                   {availableGarments.map(g => <option key={g.name} value={g.name}>{g.name}</option>)}
                 </select>
               </div>
+              {baseGarment && (
+                <div className={`text-[10px] rounded-xl border p-2.5 ${baseGarment.name.startsWith('Generic ') ? 'border-amber-500/30 bg-amber-500/10 text-amber-200' : 'border-neutral-800 bg-neutral-950 text-neutral-500'}`}>
+                  <b className="text-neutral-300">{baseGarment.name}</b> — {baseGarment.traits}
+                  {baseGarment.name.startsWith('Generic ') && <span className="block mt-1 text-amber-300">Generic fallback: no named archival silhouette is stored for this brand/product combination.</span>}
+                </div>
+              )}
 
               {productType === 'Accessories' && baseGarment?.name === "Custom Shape (Type Manual)" && (
                 <input
