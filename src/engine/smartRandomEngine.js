@@ -35,7 +35,7 @@ export const SMART_LOCK_DEFS = [
   ['colors', 'Colors'],
   ['model', 'Model'],
   ['background', 'Background'],
-  ['layout', '2/3 Panel Layout']
+  ['layout', 'Layout']
 ];
 
 export const EMPTY_RANDOM_LOCKS = Object.fromEntries(SMART_LOCK_DEFS.map(([key]) => [key, false]));
