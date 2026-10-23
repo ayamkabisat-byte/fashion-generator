@@ -207,8 +207,8 @@ export default function App() {
     let bColor = BRAND_COLOR_DNA[currentBrand];
     let cbColor = currentCoBrand !== "None" ? BRAND_COLOR_DNA[currentCoBrand] : null;
 
-    if (collabType === 'Artist' && collabArtist !== "None") bColor = ARTIST_COLOR_DNA[collabArtist] || bColor;
-    else if (collabType === 'IP' && collabCharacter !== "") bColor = IP_CHARACTER_COLOR_DNA[collabCharacter] || bColor;
+    if (collabScopes.color && collabType === 'Artist' && collabArtist !== "None") bColor = ARTIST_COLOR_DNA[collabArtist] || bColor;
+    else if (collabScopes.color && collabType === 'IP' && collabCharacter !== "") bColor = IP_CHARACTER_COLOR_DNA[collabCharacter] || bColor;
 
     if (bColor) {
       setColors([bColor[0], bColor[1] || '#FFFFFF', cbColor ? cbColor[0] : (bColor[2] || '#000000')]);
@@ -343,7 +343,7 @@ export default function App() {
       collabType, collabArtist, collabIP, collabCharacter, customIPText,
       collabStrength, collabScopes,
       baseGarment: resolvedBase,
-      materials, fitStyle,
+      materials, fitStyle, designStyle: DESIGN_STYLES[designStyle],
       components: [designComponent1, designComponent2, designComponent3],
       selectedAesthetic, selectedPattern, backgroundStyle,
       colors, colorActive: [c1Active, c2Active, c3Active],
@@ -371,6 +371,18 @@ export default function App() {
 
   const renderVisualPreview = () => {
     const currentLayoutData = ASPECT_RATIOS[aspectRatio];
+    if (outputMode === 'Panel Prompt Pack') {
+      return (
+        <div className="w-full grid grid-cols-2 gap-2 mb-5">
+          {['01 HERO','02 ON-BODY','03 DETAIL','04 TOP / 3Q'].map((label,i)=>(
+            <div key={label} className="aspect-[4/3] rounded-xl border border-neutral-800 bg-neutral-950 flex items-center justify-center relative">
+              {i===1 ? <span className="text-2xl">📸</span> : productType==='Footwear' ? <Footprints className="w-7 h-7 text-neutral-600"/> : productType==='Accessories' ? <Briefcase className="w-7 h-7 text-neutral-600"/> : <Shirt className="w-7 h-7 text-neutral-600"/>}
+              <span className="absolute bottom-2 text-[8px] font-bold tracking-wider text-neutral-500">{label}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
     let bgStyleStr = '#e5e5e5';
 
     if (selectedAesthetic !== "None (Standard Fashion)") {
