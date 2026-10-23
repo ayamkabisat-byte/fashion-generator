@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Copy, Sparkles, Wand2, CheckCircle2, Shirt, Footprints, Briefcase, Camera, UploadCloud, Ghost, Palette, Gamepad2 } from 'lucide-react';
 
 import {
@@ -123,17 +123,6 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const catalog = catalogStats(ICONIC_DB);
 
-  // --- EFFECTS ---
-  useEffect(() => {
-    if (colorMode === 'Aesthetic' && selectedAesthetic !== "None (Standard Fashion)") {
-      const aesColor = AESTHETIC_COLOR_DNA[selectedAesthetic];
-      if (aesColor) {
-        setColors([aesColor[0], aesColor[1], aesColor[2]]);
-        setC1Active(true); setC2Active(true); setC3Active(true);
-      }
-    }
-  }, [selectedAesthetic, colorMode]);
-
   // --- HANDLERS ---
   const handleProductTypeChange = (type) => {
     setProductType(type);
@@ -142,7 +131,6 @@ export default function App() {
     setDesignComponent2(DESIGN_COMPONENTS[type][0]);
     setDesignComponent3(DESIGN_COMPONENTS[type][0]);
     setCustomShapeText('');
-    const newMenus = getGarmentMenuCategories(type);
     const newMenuCat = type === 'Apparel' ? "Casual Wear" : "Iconic Silhouette";
     setMenuCategory(newMenuCat);
 
@@ -198,6 +186,17 @@ export default function App() {
       if (materials.length > 1) setMaterials(materials.filter(m => m !== mat));
     } else {
       if (materials.length < 3) setMaterials([...materials, mat]);
+    }
+  };
+
+  const handleAestheticChange = (value) => {
+    setSelectedAesthetic(value);
+    if (colorMode === 'Aesthetic') {
+      const aesColor = AESTHETIC_COLOR_DNA[value];
+      if (aesColor) {
+        setColors([aesColor[0], aesColor[1], aesColor[2]]);
+        setC1Active(true); setC2Active(true); setC3Active(true);
+      }
     }
   };
 
@@ -748,7 +747,7 @@ export default function App() {
                   <span className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-500">5</span>
                   Aesthetic & Pattern
                 </label>
-                <select value={selectedAesthetic} onChange={(e) => setSelectedAesthetic(e.target.value)}
+                <select value={selectedAesthetic} onChange={(e) => handleAestheticChange(e.target.value)}
                   className="w-full bg-indigo-950 border border-indigo-500/50 text-indigo-200 text-xs font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none p-2.5 transition-all duration-200 hover:border-indigo-500">
                   <option value="None (Standard Fashion)">Select Aesthetic: None (Standard)</option>
                   {Object.values(AESTHETIC_THEMES).reduce((acc, aes) => {
@@ -757,7 +756,7 @@ export default function App() {
                     return acc;
                   }, []).map(group => (
                     <optgroup key={group} label={group}>
-                      {Object.entries(AESTHETIC_THEMES).filter(([k,v]) => v && v.group === group).map(([k,v]) => (
+                      {Object.entries(AESTHETIC_THEMES).filter(([,v]) => v && v.group === group).map(([k]) => (
                         <option key={k} value={k}>{k}</option>
                       ))}
                     </optgroup>
