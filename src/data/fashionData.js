@@ -925,8 +925,8 @@ export const getGarmentsList = (pType, mCat, bName) => {
       const brandIcons = ICONIC_DB[pType]?.[bName];
       if (brandIcons && brandIcons.length > 0) return brandIcons;
       return [{
-        name: `${bName} Signature Silhouette`,
-        traits: `Iconic and recognizable ${bName} design language and structural shape`,
+        name: `Generic ${bName}-inspired silhouette (no archived iconic model)`,
+        traits: `brand-inspired generic structural direction for ${bName}; this is a fallback, not a named archival model`,
         allowedMats: HARD_MATS
       }];
     }
