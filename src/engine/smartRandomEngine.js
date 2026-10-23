@@ -75,11 +75,18 @@ export function deriveEffectiveLocks(current, locks = {}) {
   const effective = { ...EMPTY_RANDOM_LOCKS, ...locks };
   const dependencies = [];
 
+  if (current.useUploadedProductBase) {
+    if (!effective.product) dependencies.push('Uploaded Product Base pins Product Type during Smart Random.');
+    if (!effective.silhouette) dependencies.push('Uploaded Product Base pins the structural base during Smart Random.');
+    effective.product = true;
+    effective.silhouette = true;
+  }
+
   if (effective.silhouette) {
     if (!effective.product) dependencies.push('Base Silhouette lock also pins Product Type.');
-    if (!effective.brand) dependencies.push('Base Silhouette lock also pins Brand + Category.');
+    if (!current.useUploadedProductBase && !effective.brand) dependencies.push('Base Silhouette lock also pins Brand + Category.');
     effective.product = true;
-    effective.brand = true;
+    if (!current.useUploadedProductBase) effective.brand = true;
   }
 
   if (effective.structure && !effective.product) {
@@ -210,55 +217,21 @@ function smartBackground(aesthetic, rng) {
   return choice(pool, rng);
 }
 
-function randomFootwear(baseName, rng) {
-  const result = Object.fromEntries(Object.entries(FOOTWEAR_OPTIONS).map(([key]) => [
-    key,
-    key === 'distress' ? 'Pristine / new' : 'Preserve silhouette'
-  ]));
-
-  const structuralKeys = ['toe', 'upper', 'lacing', 'midsole', 'outsole', 'heel'];
-  const overrideCountRoll = rng();
-  const overrideCount = overrideCountRoll < 0.28 ? 0 : overrideCountRoll < 0.68 ? 1 : overrideCountRoll < 0.92 ? 2 : 3;
-  const selectedKeys = shuffled(structuralKeys, rng).slice(0, overrideCount);
-
-  for (const key of selectedKeys) {
-    let options = FOOTWEAR_OPTIONS[key].filter(v => v !== 'Preserve silhouette');
-    if (
-      key === 'lacing' &&
-      /Air Force|Dunk|Jordan 1|Blazer|Chuck|Old Skool|Samba|Gazelle|Superstar/i.test(baseName)
-    ) {
-      options = options.filter(v => v !== 'Slip-on construction');
-    }
-    result[key] = choice(options, rng);
-  }
-
-  if (rng() > 0.72) {
-    result.distress = choice(FOOTWEAR_OPTIONS.distress.slice(1), rng);
-  }
-
-  return result;
+function randomFootwear(rng) {
+  const values = FOOTWEAR_OPTIONS.sole;
+  return {
+    sole: rng() < 0.58 ? values[0] : choice(values.slice(1), rng)
+  };
 }
 
-function compatibleComponents(productType, footwear, rng) {
+function compatibleComponents(productType, rng) {
   const all = DESIGN_COMPONENTS[productType];
   const none = all[0];
-  if (rng() < 0.38) return [none, none, productType === 'Footwear' ? none : all[0]];
+  if (rng() < 0.42) return [none, none];
 
-  let pool = all.slice(1);
-  if (productType === 'Footwear' && footwear) {
-    if (/Gum outsole/i.test(footwear.outsole)) pool = pool.filter(v => v !== 'Gum Sole');
-    if (/Vibram/i.test(footwear.outsole)) pool = pool.filter(v => v !== 'Vibram Sole');
-    if (/Stacked platform/i.test(footwear.midsole)) pool = pool.filter(v => v !== 'Platform / Stacked Sole');
-    if (/Zip\/shroud/i.test(footwear.lacing)) pool = pool.filter(v => v !== 'Zipper System / Zip-Up Shroud');
-  }
-
-  const count = rng() < 0.75 ? 1 : 2;
-  const picked = shuffled(pool, rng).slice(0, count);
-  return [
-    picked[0] || none,
-    picked[1] || none,
-    productType === 'Footwear' ? none : all[0]
-  ];
+  const count = rng() < 0.82 ? 1 : 2;
+  const picked = shuffled(all.slice(1), rng).slice(0, count);
+  return [picked[0] || none, picked[1] || none];
 }
 
 function chooseSilhouette(productType, brand, lockedMaterials, rng) {
@@ -391,22 +364,21 @@ export function createSmartRandomState(current, locks = {}, rng = Math.random) {
   if (!effective.structure) {
     next.fitStyle = choice(DYNAMIC_FITS[next.productType], rng);
     next.footwear = next.productType === 'Footwear'
-      ? randomFootwear(next.baseGarment?.name || '', rng)
+      ? randomFootwear(rng)
       : current.footwear;
 
-    const comps = compatibleComponents(next.productType, next.footwear, rng);
+    const comps = compatibleComponents(next.productType, rng);
     next.designComponent1 = comps[0];
     next.designComponent2 = comps[1];
-    next.designComponent3 = comps[2];
 
     if (next.productType === 'Footwear') {
-      if (next.footwear.midsole === 'Stacked platform midsole' && next.fitStyle === 'Sleek / Aerodynamic') {
+      if (/Platform \/ Stacked/i.test(next.footwear.sole) && next.fitStyle === 'Sleek / Aerodynamic') {
         next.fitStyle = 'Chunky / Oversized Sole';
-        notes.push('Smart Random changed Fit to Chunky because a stacked platform midsole conflicts with Sleek / Aerodynamic.');
+        notes.push('Smart Random changed Fit to Chunky because a platform sole conflicts with Sleek / Aerodynamic.');
       }
-      if (/Lugged trail|Vibram/.test(next.footwear.outsole) && next.fitStyle === 'Sleek / Aerodynamic') {
+      if (/Vibram|Lugged/i.test(next.footwear.sole) && next.fitStyle === 'Sleek / Aerodynamic') {
         next.fitStyle = 'Standard Profile';
-        notes.push('Smart Random softened the Fit because a heavy trail outsole conflicts with Sleek / Aerodynamic.');
+        notes.push('Smart Random softened the Fit because a heavy lugged sole conflicts with Sleek / Aerodynamic.');
       }
     }
   }
