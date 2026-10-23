@@ -942,7 +942,7 @@ export const DYNAMIC_FITS = {
 
 export const DESIGN_COMPONENTS = {
   "Apparel": ["None (Standard Cut)", "Sleeveless / Vest-Cut", "Oversized Hooded", "Asymmetrical Hem", "Multiple Cargo Pockets", "Exposed Zippers / Techwear Hardware", "Distressed / Ripped Details"],
-  "Footwear": ["None (Standard Structure)", "Clear Outsole", "Gum Sole", "Vibram Sole", "Zipper System / Zip-Up Shroud", "Ankle Strap / Velcro Support", "Visible Air/Gel Pods", "Platform / Stacked Sole"],
+  "Footwear": ["None (Standard Structure)", "Ankle Strap / Velcro Support", "Zipper System / Zip-Up Shroud", "External Cage / Harness", "Protective Toe / Bumper", "Pull Tabs / Utility Loops", "Reflective / Technical Overlays"],
   "Accessories": ["None (Standard Detail)", "Heavy Chain Links", "Multiple Utility Pouches Attached", "Oversized Buckles / Clasps", "Bungee Cord / Webbing System"]
 };
 
