@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, Sparkles, Wand2, CheckCircle2, Shirt, Footprints, Briefcase, Layers, LayoutGrid, Camera, UploadCloud, Scissors, Ghost, Palette, Gamepad2, Smartphone } from 'lucide-react';
+import { Copy, Sparkles, Wand2, CheckCircle2, Shirt, Footprints, Briefcase, Camera, UploadCloud, Ghost, Palette, Gamepad2 } from 'lucide-react';
 
 import {
   FASHION_CATEGORIES,
@@ -16,10 +16,6 @@ import {
   AESTHETIC_THEMES,
   ALL_MATS,
   UNRESTRICTED_MATS,
-  SHEER_MATS,
-  HARD_MATS,
-  SPORT_MATS,
-  PRODUCTS,
   ICONIC_DB,
   getGarmentMenuCategories,
   getGarmentsList,
