@@ -113,6 +113,10 @@ export function deriveEffectiveLocks(current, locks = {}) {
     }
   }
 
+  if (effective.background && current.backgroundStyle === 'Auto (Match Aesthetic)' && !effective.aesthetic) {
+    dependencies.push('Background is locked to Auto, so its resolved scene can still follow a randomized Aesthetic.');
+  }
+
   return { effective, dependencies };
 }
 
@@ -168,16 +172,31 @@ function randomCollab(rng) {
   };
 }
 
-function randomPattern({ brand, coBrand, collabType, collabArtist, collabScopes }, rng) {
+function randomPattern({ brand, coBrand, collabType, collabArtist, collabScopes, whiteLabel }, rng) {
   if (rng() < 0.5) return 'Solid Color (No Pattern)';
   const global = Object.values(GLOBAL_PATTERNS).flat();
-  const contextual = [
+  const contextual = whiteLabel ? [] : [
     ...(BRAND_PATTERNS[brand] || []),
     ...(coBrand !== 'None' ? BRAND_PATTERNS[coBrand] || [] : []),
     ...(collabScopes?.motif && collabType === 'Artist' && collabArtist !== 'None' ? ARTIST_PATTERNS[collabArtist] || [] : [])
   ];
   const pool = contextual.length && rng() < 0.7 ? contextual : global;
   return choice(pool, rng);
+}
+
+function smartDesignStyle(aesthetic, rng) {
+  const name = String(aesthetic).toLowerCase();
+  let pool = Object.keys(DESIGN_STYLES);
+  if (/cyber|tech|gorpcore|y2k|frutiger/.test(name)) {
+    pool = ['Techwear / Tactical', 'Performance Engineering', 'Material Experiment', 'Deconstructed / Inside-Out'];
+  } else if (/old money|academia|minimal|quiet/.test(name)) {
+    pool = ['Quiet Luxury', 'Heritage Rework', 'Minimalist / Clean', 'Material Experiment'];
+  } else if (/opium|goth/.test(name)) {
+    pool = ['Deconstructed / Inside-Out', 'Sculptural / Avant-Garde', 'Material Experiment', 'Authentic & Ornate'];
+  } else if (/pop|fairy|kawaii|frutiger/.test(name)) {
+    pool = ['Playful / Pop', 'Material Experiment', 'Sculptural / Avant-Garde', 'Minimalist / Clean'];
+  }
+  return choice(pool.filter(x => DESIGN_STYLES[x]), rng);
 }
 
 function smartBackground(aesthetic, rng) {
@@ -306,7 +325,27 @@ export function createSmartRandomState(current, locks = {}, rng = Math.random) {
     notes.push('Locked Co-Brand matched the randomized Main Brand, so Co-Brand was cleared to prevent self-collaboration.');
   }
 
-  if (!effective.collab) Object.assign(next, randomCollab(rng));
+  if (!effective.collab) {
+    Object.assign(next, randomCollab(rng));
+    if (effective.colors && next.collabScopes.color) {
+      next.collabScopes = { ...next.collabScopes, color:false };
+      notes.push('Collab Color scope was disabled because Colors are locked.');
+    }
+    if (effective.materials && next.collabScopes.material) {
+      next.collabScopes = { ...next.collabScopes, material:false };
+      notes.push('Collab Material scope was disabled because Materials are locked.');
+    }
+    if (effective.structure && next.collabScopes.construction) {
+      next.collabScopes = { ...next.collabScopes, construction:false };
+      notes.push('Collab Construction scope was disabled because Fit + Structure are locked.');
+    }
+    if (current.whiteLabel && (next.collabScopes.branding || next.collabScopes.typography)) {
+      next.collabScopes = { ...next.collabScopes, branding:false, typography:false };
+      notes.push('Branding/Typography collab scopes were disabled because White Label is active.');
+    }
+  } else if (current.whiteLabel && (current.collabScopes?.branding || current.collabScopes?.typography)) {
+    notes.push('White Label and the locked Collaboration both request branding/typography; White Label will win in the final prompt.');
+  }
 
   if (!effective.silhouette) {
     const lockedMaterials = effective.materials ? current.materials : null;
@@ -329,6 +368,16 @@ export function createSmartRandomState(current, locks = {}, rng = Math.random) {
     next.menuCategory = current.menuCategory;
     next.baseGarment = current.baseGarment;
     next.availableGarments = current.availableGarments;
+  }
+
+  if (
+    !effective.collab &&
+    next.collabStrength >= 80 &&
+    next.collabScopes?.construction &&
+    !String(next.baseGarment?.name || '').startsWith('Generic ')
+  ) {
+    next.collabStrength = 60;
+    notes.push('Dominant Construction collab was reduced to 60% to preserve the named base silhouette.');
   }
 
   if (!effective.materials) {
@@ -367,7 +416,7 @@ export function createSmartRandomState(current, locks = {}, rng = Math.random) {
     next.selectedAesthetic = rng() > 0.28 ? choice(aesthetics, rng) : 'None (Standard Fashion)';
   }
 
-  if (!effective.designStyle) next.designStyle = choice(Object.keys(DESIGN_STYLES), rng);
+  if (!effective.designStyle) next.designStyle = smartDesignStyle(next.selectedAesthetic, rng);
   if (!effective.pattern) next.selectedPattern = randomPattern(next, rng);
   if (!effective.background) next.backgroundStyle = smartBackground(next.selectedAesthetic, rng);
   if (!effective.model) next.gender = choice(GENDERS, rng);
@@ -375,7 +424,12 @@ export function createSmartRandomState(current, locks = {}, rng = Math.random) {
   if (!effective.layout) {
     const ratios = Object.keys(ASPECT_RATIOS);
     const roll = rng();
-    next.aspectRatio = roll < 0.58 ? ratios[0] : roll < 0.82 ? ratios[1] : ratios[2];
+    if (current.externalFaceReference) {
+      next.aspectRatio = roll < 0.72 ? ratios[0] : ratios[2];
+      if (ASPECT_RATIOS[next.aspectRatio]?.productOnly) next.aspectRatio = ratios[0];
+    } else {
+      next.aspectRatio = roll < 0.58 ? ratios[0] : roll < 0.82 ? ratios[1] : ratios[2];
+    }
     next.layoutPos = ASPECT_RATIOS[next.aspectRatio]?.layoutType === 'triptych'
       ? choice(['Left', 'Center', 'Right'], rng)
       : current.layoutPos;
