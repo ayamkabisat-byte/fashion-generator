@@ -152,6 +152,7 @@ export function buildDesignSpec(settings) {
 
   const warnings = [...componentResult.warnings];
   if (settings.whiteLabel && scopes.includes('branding')) warnings.push('White-label mode overrides collab/brand branding scope.');
+  if (settings.whiteLabel && scopes.includes('typography')) warnings.push('White-label mode overrides collab typography/text scope.');
   if (settings.productType === 'Footwear' && footwear?.lacing === 'Slip-on construction' && /Air Force|Dunk|Jordan 1|Blazer|Chuck|Old Skool/i.test(base.name)) {
     warnings.push('Slip-on construction is a strong departure from the selected lace-based heritage silhouette.');
   }
