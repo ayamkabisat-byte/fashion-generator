@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Sparkles, Wand2, CheckCircle2, Shirt, Footprints, Briefcase, Camera, UploadCloud, Ghost, Palette, Gamepad2 } from 'lucide-react';
+import { Copy, Sparkles, Wand2, CheckCircle2, Shirt, Footprints, Briefcase, Camera, UploadCloud, Ghost, Palette, Gamepad2, Lock, Unlock } from 'lucide-react';
 
 import {
   FASHION_CATEGORIES,
@@ -28,6 +28,7 @@ import {
 } from './data/fashionData.js';
 import { FOOTWEAR_OPTIONS, COLLAB_SCOPE_OPTIONS, OUTPUT_TARGETS, OUTPUT_MODES } from './data/designDNA.js';
 import { buildPrompt, catalogStats } from './engine/designEngine.js';
+import { createSmartRandomState, SMART_LOCK_DEFS, EMPTY_RANDOM_LOCKS } from './engine/smartRandomEngine.js';
 
 // --- HELPER FUNGSI WARNA ---
 function hslToHex(h, s, l) {
@@ -111,6 +112,8 @@ export default function App() {
     distress: 'Pristine / new'
   });
   const [warnings, setWarnings] = useState([]);
+  const [randomLocks, setRandomLocks] = useState({ ...EMPTY_RANDOM_LOCKS });
+  const [randomizerNotes, setRandomizerNotes] = useState([]);
 
   // --- STATE: COLORS (WITH INDIVIDUAL TOGGLES) ---
   const [colorMode, setColorMode] = useState('Brand');
@@ -122,6 +125,13 @@ export default function App() {
   const [prompt, setPrompt] = useState('');
   const [copied, setCopied] = useState(false);
   const catalog = catalogStats(ICONIC_DB);
+  const currentPatternChoices = [
+    ...Object.values(GLOBAL_PATTERNS).flat(),
+    ...(BRAND_PATTERNS[brand] || []),
+    ...(coBrand !== 'None' ? BRAND_PATTERNS[coBrand] || [] : []),
+    ...(collabType === 'Artist' && collabArtist !== 'None' ? ARTIST_PATTERNS[collabArtist] || [] : [])
+  ];
+  const lockedPatternOutsideCurrentMenu = randomLocks.pattern && !currentPatternChoices.includes(selectedPattern);
 
   // --- HANDLERS ---
   const handleProductTypeChange = (type) => {
@@ -249,80 +259,81 @@ export default function App() {
     setFootwear(prev => ({ ...prev, [key]: value }));
   };
 
+  const toggleRandomLock = (key) => {
+    setRandomLocks(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const lockAllRandom = () => {
+    setRandomLocks(Object.fromEntries(SMART_LOCK_DEFS.map(([key]) => [key, true])));
+  };
+
+  const unlockAllRandom = () => {
+    setRandomLocks({ ...EMPTY_RANDOM_LOCKS });
+  };
+
   const getCoBrandList = () => {
     if (coBrandCat === 'All') return ALL_BRANDS.filter(b => b !== brand);
     return FASHION_CATEGORIES[coBrandCat].brands.filter(b => b !== brand);
   };
 
   const smartRandomize = () => {
-    const types = ["Apparel", "Footwear", "Accessories"];
-    const randType = types[Math.floor(Math.random() * types.length)];
-    const cats = Object.keys(FASHION_CATEGORIES);
-    const randCat = cats[Math.floor(Math.random() * cats.length)];
-    const brands = FASHION_CATEGORIES[randCat].brands;
-    const randBrand = brands[Math.floor(Math.random() * brands.length)];
+    const current = {
+      productType, category, brand, coBrandCat, coBrand,
+      collabType, collabArtist, collabIP, collabCharacter, customIPText,
+      collabStrength, collabScopes,
+      menuCategory, availableGarments, baseGarment, customShapeText,
+      materials, fitStyle,
+      designComponent1, designComponent2, designComponent3,
+      footwear,
+      selectedAesthetic, designStyle, selectedPattern, backgroundStyle,
+      gender, aspectRatio, layoutPos,
+      colorMode, colors, c1Active, c2Active, c3Active
+    };
 
-    const coCandidates = ALL_BRANDS.filter(b => b !== randBrand);
-    const randCoBrand = Math.random() > 0.8 ? coCandidates[Math.floor(Math.random() * coCandidates.length)] : "None";
+    const { next, notes } = createSmartRandomState(current, randomLocks);
 
-    const isIP = Math.random() > 0.5;
-    let randArtist = "None";
-    let randIP = "None";
-    let randCharacter = "";
-    if (isIP) {
-      const ips = Object.keys(COLLAB_IPS).filter(k => k !== 'None' && k !== 'Custom IP (Type Manual)');
-      randIP = Math.random() > 0.5 ? ips[Math.floor(Math.random() * ips.length)] : "None";
-      if (randIP !== "None") randCharacter = COLLAB_IPS[randIP][Math.floor(Math.random() * COLLAB_IPS[randIP].length)];
-    } else {
-      const artists = Object.keys(COLLAB_ARTISTS).filter(k => k !== 'None');
-      randArtist = Math.random() > 0.6 ? artists[Math.floor(Math.random() * artists.length)] : "None";
-    }
+    setProductType(next.productType);
+    setCategory(next.category);
+    setBrand(next.brand);
+    setCoBrandCat(next.coBrandCat);
+    setCoBrand(next.coBrand);
 
-    const menus = getGarmentMenuCategories(randType);
-    const randMenu = menus[Math.floor(Math.random() * menus.length)];
-    const items = getGarmentsList(randType, randMenu, randBrand);
-    const finalGarment = items[Math.floor(Math.random() * items.length)];
-    const shuffledMats = [...(finalGarment.allowedMats || UNRESTRICTED_MATS)].sort(() => 0.5 - Math.random());
-    const randMaterials = shuffledMats.slice(0, Math.floor(Math.random() * 3) + 1);
-    const fits = DYNAMIC_FITS[randType];
-    const randFit = fits[Math.floor(Math.random() * fits.length)];
-    const components = DESIGN_COMPONENTS[randType];
-    const randomComponent = (chance) => Math.random() < chance ? components[0] : components[Math.floor(Math.random() * components.length)];
-    const randComp1 = randomComponent(0.4);
-    const randComp2 = randomComponent(0.6);
-    const randComp3 = randType === 'Footwear' ? randomComponent(0.6) : components[0];
-    const aesthetics = Object.keys(AESTHETIC_THEMES);
-    const randAes = Math.random() > 0.3 ? aesthetics[Math.floor(Math.random() * aesthetics.length)] : "None (Standard Fashion)";
+    setCollabType(next.collabType);
+    setCollabArtist(next.collabArtist);
+    setCollabIP(next.collabIP);
+    setCollabCharacter(next.collabCharacter);
+    setCustomIPText(next.customIPText);
+    setCollabStrength(next.collabStrength);
+    setCollabScopes(next.collabScopes);
 
-    setProductType(randType); setCategory(randCat); setBrand(randBrand);
-    setCoBrandCat('All'); setCoBrand(randCoBrand);
-    setCollabType(isIP ? 'IP' : 'Artist');
-    setCollabArtist(randArtist); setCollabIP(randIP); setCollabCharacter(randCharacter); setCustomIPText('');
-    setGender(GENDERS[Math.floor(Math.random() * GENDERS.length)]);
-    setMenuCategory(randMenu); setAvailableGarments(items); setBaseGarment(finalGarment); setMaterials(randMaterials);
-    setFitStyle(randFit);
-    setDesignComponent1(randComp1); setDesignComponent2(randComp2); setDesignComponent3(randComp3);
-    setSelectedAesthetic(randAes);
-    setDesignStyle(Object.keys(DESIGN_STYLES)[Math.floor(Math.random() * Object.keys(DESIGN_STYLES).length)]);
-    setBackgroundStyle('Auto (Match Aesthetic)');
-    setCollabStrength([20,40,60,80][Math.floor(Math.random()*4)]);
+    setMenuCategory(next.menuCategory);
+    setAvailableGarments(next.availableGarments);
+    setBaseGarment(next.baseGarment);
+    setCustomShapeText(next.customShapeText);
+    setMaterials(next.materials);
 
-    if (randType === 'Footwear') {
-      const nextFootwear = {};
-      Object.entries(FOOTWEAR_OPTIONS).forEach(([key, values]) => {
-        nextFootwear[key] = values[Math.floor(Math.random() * values.length)];
-      });
-      setFootwear(nextFootwear);
-    }
+    setFitStyle(next.fitStyle);
+    setDesignComponent1(next.designComponent1);
+    setDesignComponent2(next.designComponent2);
+    setDesignComponent3(next.designComponent3);
+    setFootwear(next.footwear);
 
-    let palette = BRAND_COLOR_DNA[randBrand] || generateSensiblePalette();
-    if (isIP && randCharacter && IP_CHARACTER_COLOR_DNA[randCharacter]) palette = IP_CHARACTER_COLOR_DNA[randCharacter];
-    if (!isIP && randArtist !== "None" && ARTIST_COLOR_DNA[randArtist]) palette = ARTIST_COLOR_DNA[randArtist];
-    const coPalette = randCoBrand !== "None" ? BRAND_COLOR_DNA[randCoBrand] : null;
-    setColors([palette[0], palette[1] || '#FFFFFF', coPalette?.[0] || palette[2] || '#000000']);
-    setColorMode('Auto');
-    const activeCount = Math.floor(Math.random() * 3) + 1;
-    setC1Active(true); setC2Active(activeCount >= 2); setC3Active(activeCount === 3);
+    setSelectedAesthetic(next.selectedAesthetic);
+    setDesignStyle(next.designStyle);
+    setSelectedPattern(next.selectedPattern);
+    setBackgroundStyle(next.backgroundStyle);
+
+    setGender(next.gender);
+    setAspectRatio(next.aspectRatio);
+    setLayoutPos(next.layoutPos);
+
+    setColorMode(next.colorMode);
+    setColors(next.colors);
+    setC1Active(next.c1Active);
+    setC2Active(next.c2Active);
+    setC3Active(next.c3Active);
+
+    setRandomizerNotes(notes);
     setWarnings([]);
     setPrompt('');
   };
@@ -465,8 +476,46 @@ export default function App() {
             </div>
           </div>
           <button onClick={smartRandomize} className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_25px_rgba(239,68,68,0.6)]">
-            <Sparkles className="w-4 h-4 transition-transform duration-500 group-hover:rotate-12" /> SMART RANDOMIZE
+            <Sparkles className="w-4 h-4 transition-transform duration-500 group-hover:rotate-12" /> SMART RANDOMIZE {Object.values(randomLocks).some(Boolean) ? `· ${Object.values(randomLocks).filter(Boolean).length} LOCKED` : ''}
           </button>
+        </div>
+
+        <div className="bg-[#0a0a0a] border border-neutral-800 rounded-2xl p-3 md:p-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-neutral-300 flex items-center gap-2">
+                <Lock className="w-3.5 h-3.5 text-amber-400" /> Smart Random Locks
+                <span className="text-[9px] text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-full px-2 py-0.5">
+                  {Object.values(randomLocks).filter(Boolean).length} locked
+                </span>
+              </div>
+              <p className="text-[9px] text-neutral-500 mt-1">Locks affect SMART RANDOMIZE only. You can still edit every parameter manually.</p>
+            </div>
+            <div className="flex gap-1.5">
+              <button type="button" onClick={lockAllRandom} className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-200 hover:bg-amber-500/20">
+                Lock All
+              </button>
+              <button type="button" onClick={unlockAllRandom} className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-white">
+                Unlock All
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {SMART_LOCK_DEFS.map(([key,label]) => (
+              <button key={key} type="button" onClick={() => toggleRandomLock(key)}
+                className={`inline-flex items-center gap-1.5 text-[9px] font-bold px-2.5 py-1.5 rounded-lg border transition-all ${randomLocks[key] ? 'border-amber-500/50 bg-amber-500/15 text-amber-200' : 'border-neutral-800 bg-neutral-950 text-neutral-500 hover:text-neutral-300'}`}
+                title={randomLocks[key] ? `Unlock ${label} from Smart Random` : `Lock ${label} from Smart Random`}>
+                {randomLocks[key] ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
+                {label}
+              </button>
+            ))}
+          </div>
+          {randomizerNotes.length > 0 && (
+            <div className="mt-3 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-2.5 text-[9px] text-cyan-200">
+              <b className="block mb-1">Smart Random resolver</b>
+              {randomizerNotes.map((note,i)=><div key={i}>• {note}</div>)}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -771,6 +820,7 @@ export default function App() {
                 <div className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 rounded-xl p-2 mt-2 transition-all duration-200 hover:border-neutral-700">
                   <Palette className="w-4 h-4 text-red-500 flex-shrink-0 ml-1" />
                   <select value={selectedPattern} onChange={(e) => setSelectedPattern(e.target.value)} className="w-full bg-transparent text-xs text-red-300 font-bold focus:ring-0 p-1 truncate transition-all duration-200">
+                    {lockedPatternOutsideCurrentMenu && <option value={selectedPattern} className="bg-neutral-900 text-amber-300">🔒 Locked: {selectedPattern}</option>}
                     {Object.entries(GLOBAL_PATTERNS).map(([region, patterns]) => (
                       <optgroup key={region} label={`Global: ${region}`}>
                         {patterns.map(p => <option key={p} value={p} className="bg-neutral-900 text-white">{p}</option>)}
