@@ -974,7 +974,25 @@ export const BACKGROUND_STYLES = {
 
 export const GENDERS = ['Female', 'Female (with Hijab)', 'Female (Plus Size)', 'Male', 'Male (Plus Size)', 'Androgynous'];
 export const ASPECT_RATIOS = {
-  "16:9 (Desktop/Landscape)": { ratio: "--ar 16:9", layoutType: "triptych", productOnly: false },
-  "16:9 (Diptych - Product Only)": { ratio: "--ar 16:9", layoutType: "diptych-horizontal", productOnly: true },
-  "9:16 (TikTok/Reels)": { ratio: "--ar 9:16", layoutType: "diptych-vertical", productOnly: false }
+  "16:9 (Desktop/Landscape)": {
+    ratio: "--ar 16:9",
+    layoutType: "triptych",
+    productOnly: false,
+    label: "3 Panels · Triptych · 16:9",
+    shortLabel: "3 Panels · Triptych"
+  },
+  "16:9 (Diptych - Product Only)": {
+    ratio: "--ar 16:9",
+    layoutType: "diptych-horizontal",
+    productOnly: true,
+    label: "2 Panels · Product Diptych · 16:9",
+    shortLabel: "2 Panels · Product"
+  },
+  "9:16 (TikTok/Reels)": {
+    ratio: "--ar 9:16",
+    layoutType: "diptych-vertical",
+    productOnly: false,
+    label: "2 Panels · Vertical Lookbook · 9:16",
+    shortLabel: "2 Panels · Vertical"
+  }
 };
