@@ -83,7 +83,6 @@ export default function App() {
   const [fitStyle, setFitStyle] = useState('Regular Fit');
   const [designComponent1, setDesignComponent1] = useState('None (Standard Cut)');
   const [designComponent2, setDesignComponent2] = useState('None (Standard Cut)');
-  const [designComponent3, setDesignComponent3] = useState('None (Standard Structure)');
 
   const [selectedAesthetic, setSelectedAesthetic] = useState('None (Standard Fashion)');
   const [designStyle, setDesignStyle] = useState('Authentic & Ornate');
@@ -94,7 +93,9 @@ export default function App() {
   const [aspectRatio, setAspectRatio] = useState("16:9 (Desktop/Landscape)");
   const [layoutPos, setLayoutPos] = useState('Center');
   const [whiteLabel, setWhiteLabel] = useState(false);
-  const [externalDesignReference, setExternalDesignReference] = useState(false);
+  const [useUploadedProductBase, setUseUploadedProductBase] = useState(false);
+  const [uploadedProductImage, setUploadedProductImage] = useState('');
+  const [uploadedProductName, setUploadedProductName] = useState('');
   const [externalFaceReference, setExternalFaceReference] = useState(false);
   const [collabStrength, setCollabStrength] = useState(40);
   const [collabScopes, setCollabScopes] = useState({
@@ -103,13 +104,7 @@ export default function App() {
   const [outputTarget, setOutputTarget] = useState('Universal');
   const [outputMode, setOutputMode] = useState('Composite Sheet');
   const [footwear, setFootwear] = useState({
-    toe: 'Preserve silhouette',
-    upper: 'Preserve silhouette',
-    lacing: 'Preserve silhouette',
-    midsole: 'Preserve silhouette',
-    outsole: 'Preserve silhouette',
-    heel: 'Preserve silhouette',
-    distress: 'Pristine / new'
+    sole: 'Preserve base sole'
   });
   const [warnings, setWarnings] = useState([]);
   const [randomLocks, setRandomLocks] = useState({ ...EMPTY_RANDOM_LOCKS });
@@ -259,6 +254,24 @@ export default function App() {
     setFootwear(prev => ({ ...prev, [key]: value }));
   };
 
+  const handleProductReferenceUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setUploadedProductImage(String(reader.result || ''));
+      setUploadedProductName(file.name);
+      setUseUploadedProductBase(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const clearProductReference = () => {
+    setUploadedProductImage('');
+    setUploadedProductName('');
+    setUseUploadedProductBase(false);
+  };
+
   const toggleRandomLock = (key) => {
     setRandomLocks(prev => ({ ...prev, [key]: !prev[key] }));
   };
@@ -283,11 +296,11 @@ export default function App() {
       collabStrength, collabScopes,
       menuCategory, availableGarments, baseGarment, customShapeText,
       materials, fitStyle,
-      designComponent1, designComponent2, designComponent3,
+      designComponent1, designComponent2,
       footwear,
       selectedAesthetic, designStyle, selectedPattern, backgroundStyle,
       gender, aspectRatio, layoutPos,
-      whiteLabel, externalFaceReference, externalDesignReference, outputMode, outputTarget,
+      whiteLabel, externalFaceReference, useUploadedProductBase, outputMode, outputTarget,
       colorMode, colors, c1Active, c2Active, c3Active
     };
 
@@ -316,7 +329,6 @@ export default function App() {
     setFitStyle(next.fitStyle);
     setDesignComponent1(next.designComponent1);
     setDesignComponent2(next.designComponent2);
-    setDesignComponent3(next.designComponent3);
     setFootwear(next.footwear);
 
     setSelectedAesthetic(next.selectedAesthetic);
@@ -355,12 +367,12 @@ export default function App() {
       collabStrength, collabScopes,
       baseGarment: resolvedBase,
       materials, fitStyle, designStyle: DESIGN_STYLES[designStyle],
-      components: [designComponent1, designComponent2, designComponent3],
+      components: [designComponent1, designComponent2],
       selectedAesthetic, selectedPattern, backgroundStyle,
       colors, colorActive: [c1Active, c2Active, c3Active],
       whiteLabel, gender, aspectRatio, layoutPos,
       outputTarget, outputMode, footwear,
-      externalDesignReference, externalFaceReference
+      useUploadedProductBase, uploadedProductName, externalFaceReference
     });
     setPrompt(result.prompt);
     setWarnings(result.spec.warnings);
@@ -699,6 +711,38 @@ export default function App() {
                   className="w-full bg-neutral-950 border border-orange-500/50 text-orange-200 font-bold text-xs p-3 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-200"
                 />
               )}
+
+              <div className={`rounded-xl border p-3 transition-all ${useUploadedProductBase ? 'border-indigo-500/50 bg-indigo-500/10' : 'border-neutral-800 bg-neutral-950'}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={useUploadedProductBase}
+                      onChange={(e) => setUseUploadedProductBase(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded border-neutral-700 bg-neutral-950 text-indigo-500"
+                    />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-indigo-200">Use Uploaded Product as Base</span>
+                  </label>
+                  <label className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3 py-2 text-[9px] font-bold text-indigo-200 hover:bg-indigo-500/20">
+                    <UploadCloud className="w-3 h-3" />
+                    Choose Image
+                    <input type="file" accept="image/*" onChange={handleProductReferenceUpload} className="sr-only" />
+                  </label>
+                </div>
+
+                {uploadedProductImage ? (
+                  <div className="mt-3 flex items-center gap-3">
+                    <img src={uploadedProductImage} alt="Uploaded product reference" className="w-16 h-16 rounded-lg object-cover border border-neutral-700 bg-white" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[10px] font-bold text-white truncate">{uploadedProductName}</div>
+                      <div className="text-[9px] text-neutral-400 mt-1">When enabled, this image becomes the structural base. Brand, material, color and collab redesign it without replacing its shape.</div>
+                    </div>
+                    <button type="button" onClick={clearProductReference} className="text-[9px] text-neutral-400 hover:text-red-300">Clear</button>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-[9px] text-neutral-500">Useful for local, niche or custom products the image model may not recognize by name. Attach the same image again in the target image generator.</p>
+                )}
+              </div>
             </div>
 
             {/* STEP 3: Multi-Material */}
@@ -756,7 +800,7 @@ export default function App() {
                   ))}
                 </div>
 
-                <div className={`grid gap-2 ${productType === 'Footwear' ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                <div className="grid grid-cols-2 gap-2">
                   <select value={designComponent1} onChange={(e) => setDesignComponent1(e.target.value)}
                     className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
                     {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
@@ -765,30 +809,17 @@ export default function App() {
                     className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
                     {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
                   </select>
-                  {productType === 'Footwear' && (
-                    <select value={designComponent3} onChange={(e) => setDesignComponent3(e.target.value)}
-                      className="w-full bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none p-2 truncate transition-all duration-200 hover:border-neutral-700">
-                      {DESIGN_COMPONENTS[productType].map(comp => <option key={comp} value={comp}>Add: {comp}</option>)}
-                    </select>
-                  )}
                 </div>
               </div>
 
               {productType === 'Footwear' && (
-                <div className="md:col-span-2 space-y-2 bg-orange-500/5 border border-orange-500/20 rounded-xl p-3">
-                  <div className="text-[10px] font-black uppercase tracking-wider text-orange-300">Footwear Anatomy · optional overrides</div>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                    {Object.entries(FOOTWEAR_OPTIONS).map(([key,values]) => (
-                      <label key={key} className="text-[9px] uppercase text-neutral-500 font-bold">
-                        {key}
-                        <select value={footwear[key]} onChange={(e)=>updateFootwear(key,e.target.value)}
-                          className="mt-1 w-full bg-neutral-950 border border-neutral-800 text-neutral-200 text-[10px] rounded-lg p-2 normal-case">
-                          {values.map(v=><option key={v} value={v}>{v}</option>)}
-                        </select>
-                      </label>
-                    ))}
-                  </div>
-                  <p className="text-[9px] text-neutral-500">“Preserve silhouette” keeps the selected iconic model authoritative; overrides modify only that anatomical layer.</p>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">Sole Modifier</label>
+                  <select value={footwear.sole} onChange={(e)=>updateFootwear('sole',e.target.value)}
+                    className="w-full bg-neutral-900 border border-neutral-800 text-orange-200 text-[10px] font-bold rounded-xl p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none">
+                    {FOOTWEAR_OPTIONS.sole.map(v=><option key={v} value={v}>{v}</option>)}
+                  </select>
+                  <p className="text-[9px] text-neutral-500">Leave on Preserve Base Sole unless the sole itself should visibly change the footwear silhouette.</p>
                 </div>
               )}
 
@@ -928,25 +959,19 @@ export default function App() {
                   </select>
                 )}
 
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  <label className={`flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border ${externalDesignReference ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`}>
-                    <input type="checkbox" checked={externalDesignReference} onChange={(e) => setExternalDesignReference(e.target.checked)} className="sr-only" />
-                    <UploadCloud className="w-3 h-3" /> <span className="text-[9px] font-bold">External Design Ref</span>
-                  </label>
+                <div className="mt-2">
                   <label className={`flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border ${externalFaceReference ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`}>
                     <input type="checkbox" checked={externalFaceReference} onChange={(e) => setExternalFaceReference(e.target.checked)} className="sr-only" />
-                    <Camera className="w-3 h-3" /> <span className="text-[9px] font-bold">External Face Ref</span>
+                    <Camera className="w-3 h-3" /> <span className="text-[9px] font-bold">External Face Reference</span>
                   </label>
+                  {externalFaceReference && <p className="text-[9px] text-neutral-500 mt-1">Attach the same person reference in the target image generator.</p>}
                 </div>
-                {(externalDesignReference || externalFaceReference) && (
-                  <p className="text-[9px] text-neutral-500">Reference toggle adds instructions for an image you attach in the downstream generator; this web app does not pretend to upload or bind a reference by itself.</p>
-                )}
-              </div>
+            </div>
             </div>
 
             <button onClick={generatePrompt}
               className="w-full py-4 mt-2 bg-gradient-to-r from-red-600 to-orange-500 text-white hover:opacity-90 rounded-2xl font-black flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 shadow-[0_0_20px_rgba(239,68,68,0.3)] hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] text-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-4 focus:ring-offset-neutral-900">
-              <Wand2 className="w-4 h-4" /> GENERATE MASTERPIECE
+              <Wand2 className="w-4 h-4" /> GENERATE PROMPT
             </button>
           </div>
 
