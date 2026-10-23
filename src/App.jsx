@@ -30,6 +30,8 @@ import {
   GENDERS,
   ASPECT_RATIOS
 } from './data/fashionData.js';
+import { FOOTWEAR_OPTIONS, COLLAB_SCOPE_OPTIONS, OUTPUT_TARGETS, OUTPUT_MODES } from './data/designDNA.js';
+import { buildPrompt, catalogStats } from './engine/designEngine.js';
 
 // --- HELPER FUNGSI WARNA ---
 function hslToHex(h, s, l) {
@@ -95,8 +97,24 @@ export default function App() {
   const [aspectRatio, setAspectRatio] = useState("16:9 (Desktop/Landscape)");
   const [layoutPos, setLayoutPos] = useState('Center');
   const [whiteLabel, setWhiteLabel] = useState(false);
-  const [useUploadedDesign, setUseUploadedDesign] = useState(false);
-  const [strictFaceMode, setStrictFaceMode] = useState(false);
+  const [externalDesignReference, setExternalDesignReference] = useState(false);
+  const [externalFaceReference, setExternalFaceReference] = useState(false);
+  const [collabStrength, setCollabStrength] = useState(40);
+  const [collabScopes, setCollabScopes] = useState({
+    color: true, motif: true, material: false, construction: false, typography: true, branding: true
+  });
+  const [outputTarget, setOutputTarget] = useState('Universal');
+  const [outputMode, setOutputMode] = useState('Composite Sheet');
+  const [footwear, setFootwear] = useState({
+    toe: 'Preserve silhouette',
+    upper: 'Preserve silhouette',
+    lacing: 'Preserve silhouette',
+    midsole: 'Preserve silhouette',
+    outsole: 'Preserve silhouette',
+    heel: 'Preserve silhouette',
+    distress: 'Pristine / new'
+  });
+  const [warnings, setWarnings] = useState([]);
 
   // --- STATE: COLORS (WITH INDIVIDUAL TOGGLES) ---
   const [colorMode, setColorMode] = useState('Brand');
@@ -107,6 +125,7 @@ export default function App() {
 
   const [prompt, setPrompt] = useState('');
   const [copied, setCopied] = useState(false);
+  const catalog = catalogStats(ICONIC_DB);
 
   // --- EFFECTS ---
   useEffect(() => {
@@ -218,6 +237,23 @@ export default function App() {
     setC1Active(true); setC2Active(true); setC3Active(true);
   };
 
+  const applyAestheticColors = () => {
+    setColorMode('Aesthetic');
+    const aesColor = AESTHETIC_COLOR_DNA[selectedAesthetic];
+    if (aesColor) {
+      setColors([aesColor[0], aesColor[1], aesColor[2]]);
+      setC1Active(true); setC2Active(true); setC3Active(true);
+    }
+  };
+
+  const toggleCollabScope = (key) => {
+    setCollabScopes(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const updateFootwear = (key, value) => {
+    setFootwear(prev => ({ ...prev, [key]: value }));
+  };
+
   const getCoBrandList = () => {
     if (coBrandCat === 'All') return ALL_BRANDS.filter(b => b !== brand);
     return FASHION_CATEGORIES[coBrandCat].brands.filter(b => b !== brand);
@@ -226,221 +262,101 @@ export default function App() {
   const smartRandomize = () => {
     const types = ["Apparel", "Footwear", "Accessories"];
     const randType = types[Math.floor(Math.random() * types.length)];
-
     const cats = Object.keys(FASHION_CATEGORIES);
     const randCat = cats[Math.floor(Math.random() * cats.length)];
     const brands = FASHION_CATEGORIES[randCat].brands;
     const randBrand = brands[Math.floor(Math.random() * brands.length)];
 
-    const randCoBrand = Math.random() > 0.8 ? ALL_BRANDS[Math.floor(Math.random() * ALL_BRANDS.length)] : "None";
+    const coCandidates = ALL_BRANDS.filter(b => b !== randBrand);
+    const randCoBrand = Math.random() > 0.8 ? coCandidates[Math.floor(Math.random() * coCandidates.length)] : "None";
 
     const isIP = Math.random() > 0.5;
-    setCollabType(isIP ? 'IP' : 'Artist');
     let randArtist = "None";
     let randIP = "None";
+    let randCharacter = "";
     if (isIP) {
       const ips = Object.keys(COLLAB_IPS).filter(k => k !== 'None' && k !== 'Custom IP (Type Manual)');
       randIP = Math.random() > 0.5 ? ips[Math.floor(Math.random() * ips.length)] : "None";
-      setCollabIP(randIP);
-      if (randIP !== "None") setCollabCharacter(COLLAB_IPS[randIP][0]);
-      setCollabArtist("None");
-      setCustomIPText('');
+      if (randIP !== "None") randCharacter = COLLAB_IPS[randIP][Math.floor(Math.random() * COLLAB_IPS[randIP].length)];
     } else {
       const artists = Object.keys(COLLAB_ARTISTS).filter(k => k !== 'None');
       randArtist = Math.random() > 0.6 ? artists[Math.floor(Math.random() * artists.length)] : "None";
-      setCollabArtist(randArtist);
-      setCollabIP("None");
     }
 
     const menus = getGarmentMenuCategories(randType);
     const randMenu = menus[Math.floor(Math.random() * menus.length)];
-    let items = getGarmentsList(randType, randMenu, randBrand);
-    let finalGarment = items[Math.floor(Math.random() * items.length)];
-
+    const items = getGarmentsList(randType, randMenu, randBrand);
+    const finalGarment = items[Math.floor(Math.random() * items.length)];
     const shuffledMats = [...(finalGarment.allowedMats || UNRESTRICTED_MATS)].sort(() => 0.5 - Math.random());
     const randMaterials = shuffledMats.slice(0, Math.floor(Math.random() * 3) + 1);
-
     const fits = DYNAMIC_FITS[randType];
     const randFit = fits[Math.floor(Math.random() * fits.length)];
-
     const components = DESIGN_COMPONENTS[randType];
-    const randComp1 = Math.random() > 0.4 ? components[Math.floor(Math.random() * components.length)] : components[0];
-    const randComp2 = Math.random() > 0.6 && randComp1 !== components[0] ? components[Math.floor(Math.random() * components.length)] : components[0];
-
+    const randomComponent = (chance) => Math.random() < chance ? components[0] : components[Math.floor(Math.random() * components.length)];
+    const randComp1 = randomComponent(0.4);
+    const randComp2 = randomComponent(0.6);
+    const randComp3 = randType === 'Footwear' ? randomComponent(0.6) : components[0];
     const aesthetics = Object.keys(AESTHETIC_THEMES);
     const randAes = Math.random() > 0.3 ? aesthetics[Math.floor(Math.random() * aesthetics.length)] : "None (Standard Fashion)";
 
     setProductType(randType); setCategory(randCat); setBrand(randBrand);
     setCoBrandCat('All'); setCoBrand(randCoBrand);
+    setCollabType(isIP ? 'IP' : 'Artist');
+    setCollabArtist(randArtist); setCollabIP(randIP); setCollabCharacter(randCharacter); setCustomIPText('');
     setGender(GENDERS[Math.floor(Math.random() * GENDERS.length)]);
-    setMenuCategory(randMenu); setAvailableGarments(getGarmentsList(randType, randMenu, randBrand));
-    setBaseGarment(finalGarment); setMaterials(randMaterials);
+    setMenuCategory(randMenu); setAvailableGarments(items); setBaseGarment(finalGarment); setMaterials(randMaterials);
     setFitStyle(randFit);
-    setDesignComponent1(randComp1); setDesignComponent2(randComp2);
-    setSelectedAesthetic(randAes); setDesignStyle(Object.keys(DESIGN_STYLES)[Math.floor(Math.random() * 3)]);
+    setDesignComponent1(randComp1); setDesignComponent2(randComp2); setDesignComponent3(randComp3);
+    setSelectedAesthetic(randAes);
+    setDesignStyle(Object.keys(DESIGN_STYLES)[Math.floor(Math.random() * Object.keys(DESIGN_STYLES).length)]);
     setBackgroundStyle('Auto (Match Aesthetic)');
+    setCollabStrength([20,40,60,80][Math.floor(Math.random()*4)]);
 
+    if (randType === 'Footwear') {
+      const nextFootwear = {};
+      Object.entries(FOOTWEAR_OPTIONS).forEach(([key, values]) => {
+        nextFootwear[key] = values[Math.floor(Math.random() * values.length)];
+      });
+      setFootwear(nextFootwear);
+    }
+
+    let palette = BRAND_COLOR_DNA[randBrand] || generateSensiblePalette();
+    if (isIP && randCharacter && IP_CHARACTER_COLOR_DNA[randCharacter]) palette = IP_CHARACTER_COLOR_DNA[randCharacter];
+    if (!isIP && randArtist !== "None" && ARTIST_COLOR_DNA[randArtist]) palette = ARTIST_COLOR_DNA[randArtist];
+    const coPalette = randCoBrand !== "None" ? BRAND_COLOR_DNA[randCoBrand] : null;
+    setColors([palette[0], palette[1] || '#FFFFFF', coPalette?.[0] || palette[2] || '#000000']);
+    setColorMode('Auto');
     const activeCount = Math.floor(Math.random() * 3) + 1;
-    setC1Active(true);
-    setC2Active(activeCount >= 2);
-    setC3Active(activeCount === 3);
-
-    setTimeout(() => applyAutoColors(randBrand, randCoBrand), 50);
+    setC1Active(true); setC2Active(activeCount >= 2); setC3Active(activeCount === 3);
+    setWarnings([]);
+    setPrompt('');
   };
 
   const generatePrompt = () => {
-    const brandStyle = FASHION_CATEGORIES[category].description;
-    const coBrandText = coBrand !== "None" ? ` x ${coBrand}` : '';
-
-    let collabText = "";
-    let collabDetails = "";
-    if (collabType === 'Artist' && collabArtist !== "None") {
-      collabText = ` x ${collabArtist.split(' ')[0]}`;
-      collabDetails = `Aesthetic Injection: ${COLLAB_ARTISTS[collabArtist]}.`;
-    } else if (collabType === 'IP' && collabIP !== "None") {
-      const ipName = collabIP === "Custom IP (Type Manual)" ? customIPText : collabCharacter;
-      collabText = ` x ${ipName}`;
-      collabDetails = `Pop-Culture Injection: Heavily themed around ${ipName}, integrating iconic character colorways, motifs, and graphic elements into the design structure.`;
+    let resolvedBase = baseGarment;
+    if (productType === 'Accessories' && baseGarment?.name === "Custom Shape (Type Manual)" && customShapeText.trim()) {
+      resolvedBase = {
+        name: customShapeText.trim(),
+        traits: `literal functional ${customShapeText.trim().toLowerCase()} structural form`,
+        allowedMats: baseGarment.allowedMats
+      };
     }
 
-    let materialText = "";
-    if (materials.length === 1) materialText = `${materials[0]}`;
-    else if (materials.length === 2) materialText = `a mixed-material paneling of ${materials[0]} and ${materials[1]}`;
-    else materialText = `a complex patchwork construction of ${materials[0]}, ${materials[1]}, and ${materials[2]}`;
-
-    // --- INDIVIDUAL COLOR LOGIC ---
-    let activeColorsList = [];
-    if (c1Active) activeColorsList.push(colors[0]);
-    if (c2Active) activeColorsList.push(colors[1]);
-    if (c3Active) activeColorsList.push(colors[2]);
-
-    let colorPrompt = "";
-    if (activeColorsList.length === 1) {
-      colorPrompt = `Color Palette: Monochromatic styling focusing purely on ${activeColorsList[0]}.`;
-    } else if (activeColorsList.length === 2) {
-      colorPrompt = `Color Palette: Two-tone styling featuring ${activeColorsList[0]} and ${activeColorsList[1]}.`;
-    } else if (activeColorsList.length === 3) {
-      colorPrompt = `Color Palette: Main base ${activeColorsList[0]}, Secondary ${activeColorsList[1]}, Accent ${activeColorsList[2]}.`;
-    }
-
-    let compList = [];
-    if (designComponent1 && !designComponent1.includes("None")) compList.push(designComponent1.toLowerCase());
-    if (designComponent2 && !designComponent2.includes("None") && designComponent2 !== designComponent1) compList.push(designComponent2.toLowerCase());
-    if (productType === 'Footwear' && designComponent3 && !designComponent3.includes("None") && designComponent3 !== designComponent1 && designComponent3 !== designComponent2) compList.push(designComponent3.toLowerCase());
-
-    let componentText = compList.length > 0 ? ` Structurally modified with ${compList.join(' and ')} features.` : "";
-
-    let patternText = "";
-    if (selectedPattern !== "Solid Color (No Pattern)") {
-      patternText = ` Featuring prominent all-over ${selectedPattern} pattern adapted to the design.`;
-    }
-
-    const currentLayoutData = ASPECT_RATIOS[aspectRatio];
-    const isProductOnly = currentLayoutData.productOnly;
-
-    let garmentSilhouette = baseGarment.name;
-    let garmentTraits = baseGarment.traits;
-    let accessoryTypeStr = "bag accessory";
-
-    if (productType === 'Accessories') {
-      if (baseGarment.name === "Custom Shape (Type Manual)" && customShapeText.trim() !== "") {
-        garmentSilhouette = customShapeText.trim();
-        garmentTraits = `avant-garde, literal and functional ${customShapeText.toLowerCase()} structural form`;
-        accessoryTypeStr = customShapeText.toLowerCase();
-      } else if (!baseGarment.name.toLowerCase().includes('bag') && !baseGarment.name.toLowerCase().includes('backpack') && !baseGarment.name.toLowerCase().includes('tote')) {
-        accessoryTypeStr = "accessory";
-      }
-    }
-
-    // --- WHITE LABEL LOGIC ---
-    let whiteLabelPrompt = "";
-    if (whiteLabel) {
-      let antiBrandText = `(Remove ALL ${brand} insignias)`;
-      if (coBrand !== "None") antiBrandText = `(Remove ALL ${brand} and ${coBrand} insignias)`;
-      whiteLabelPrompt = `CRITICAL INSTRUCTION: NO BRAND LOGOS, NO TEXT, NO GRAPHIC TYPOGRAPHY. Keep the design completely unbranded (white-label). Replicate the silhouette and vibe ONLY, strip all visible trademarks or logos ${antiBrandText}.`;
-    } else {
-      whiteLabelPrompt = `Feature signature branding prominently.`;
-    }
-
-    let negativePrompt = "--no floating text, watermarks, captions, borders, UI elements";
-    if (whiteLabel) {
-      negativePrompt += `, clothing typography, brand logos, graphic text, ${brand} logo`;
-      if (coBrand !== "None") negativePrompt += `, ${coBrand} logo`;
-    }
-    if (isProductOnly) negativePrompt += ", humans, models, people, faces, bodies";
-
-    // --- STRICT FACE MODE & UPLOAD ---
-    let refInst = useUploadedDesign ? `\nINSTRUCTION: Accommodate the custom graphics from the uploaded image reference perfectly.` : "";
-    if (strictFaceMode && !isProductOnly) {
-      refInst += `\nCRITICAL PERSONALIZATION: Maintain STRICT facial consistency of the subject from the reference image. Use --cref to lock facial identity. ONLY adapt wardrobe, pose, and background. Do not alter the core facial structure.`;
-    }
-
-    const isHijabi = gender.includes('Hijab');
-    const modelGender = gender.includes('Plus Size') ? `plus-size curvy ${gender.split(' ')[0].toLowerCase()}` : gender.toLowerCase().replace(' (with hijab)', '');
-    const hijabPrompt = isHijabi ? ' wearing a matching high-fashion sleek hijab (modest styling),' : '';
-
-    let aestheticContext = "";
-    let aestheticModelVibe = "";
-    let finalBackground = BACKGROUND_STYLES[backgroundStyle];
-
-    if (selectedAesthetic !== "None (Standard Fashion)") {
-      const aes = AESTHETIC_THEMES[selectedAesthetic];
-      if (aes) {
-        aestheticContext = `Aesthetic Core: ${selectedAesthetic}. Overall Vibe & Wardrobe context: ${aes.clothing}. Lighting & Atmosphere: ${aes.lighting}.`;
-        aestheticModelVibe = `Model Expression & Makeup: ${aes.makeup}.`;
-        if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = `Setting & Decor: ${aes.background}.`;
-      }
-    } else {
-      if (backgroundStyle === "Auto (Match Aesthetic)") finalBackground = BACKGROUND_STYLES["Clean Studio"];
-    }
-
-    // --- LAYOUT ASSEMBLY ---
-    let panelFront, panelBack, panelModel;
-
-    if (productType === 'Apparel') {
-      panelFront = `Front view flat lay / tech pack of the garment, highly detailed, clean white background, showing the front tailoring, ${fitStyle.toLowerCase()}, focusing on the ${garmentSilhouette} silhouette. Constructed using ${materialText}.${patternText}${componentText}`;
-      panelBack = `Back view flat lay / tech pack of the garment, detailing the back tailoring and complex fabric paneling.`;
-      panelModel = `A high-fashion lookbook full-body shot of a stunning ${modelGender} model${hijabPrompt} wearing the fusion garment. ${aestheticModelVibe} ${finalBackground}`;
-    } else if (productType === 'Footwear') {
-      panelFront = `Lateral (outer side) profile view of the footwear, highly detailed studio shot, clean white background, highlighting the ${fitStyle.toLowerCase()} styling and ${garmentSilhouette}. Crafted primarily from ${materialText}.${patternText}${componentText}`;
-      panelBack = `Top-down and sole detail view of the footwear, showcasing the material textures, tread patterns, and complex construction.`;
-      panelModel = `A high-fashion dynamic lookbook shot focusing on a ${modelGender} model's feet wearing the fusion sneakers/shoes. The model is standing in frame. ${aestheticModelVibe} ${finalBackground}`;
-    } else {
-      panelFront = `Front facing highly detailed product shot of the ${garmentSilhouette}, clean white background, highlighting its ${fitStyle.toLowerCase()} structure. Crafted from ${materialText}.${patternText}${componentText}`;
-      panelBack = `Alternative angle product shot showing intricate structural details, functional elements, or back paneling of the ${accessoryTypeStr}.`;
-      panelModel = `A high-fashion lookbook shot of a ${modelGender} model${hijabPrompt} prominently displaying, carrying, or interacting with the fusion ${accessoryTypeStr}. ${aestheticModelVibe} ${finalBackground}`;
-    }
-
-    let layoutPrompt = "";
-    if (currentLayoutData.layoutType === 'diptych-vertical') {
-      layoutPrompt = `layout split horizontally into 2 vertical panels (Top and Bottom).\nTop Panel: ${panelModel}\nBottom Panel: ${panelFront}`;
-    } else if (currentLayoutData.layoutType === 'diptych-horizontal') {
-      layoutPrompt = `layout split vertically into 2 perfectly equal horizontal panels (Left and Right).\nLeft Panel: ${panelFront}\nRight Panel: ${panelBack}`;
-    } else {
-      let leftPanel, centerPanel, rightPanel;
-      if (layoutPos === 'Center') { leftPanel = panelFront; centerPanel = panelModel; rightPanel = panelBack; }
-      else if (layoutPos === 'Left') { leftPanel = panelModel; centerPanel = panelFront; rightPanel = panelBack; }
-      else { leftPanel = panelFront; centerPanel = panelBack; rightPanel = panelModel; }
-
-      layoutPrompt = `triptych layout split perfectly into 3 vertical panels.\nLeft Panel: ${leftPanel}\nCenter Panel: ${centerPanel}\nRight Panel: ${rightPanel}`;
-    }
-
-    let conceptBrandStr = whiteLabel ? "an unbranded high-fashion" : `${brand}${coBrandText}`;
-
-    const basePrompt = `A stunning product and fashion editorial photography, ${layoutPrompt}
-
-Concept: A crossover ${productType.toLowerCase()} design combining ${conceptBrandStr}${collabText} (${category} style: ${brandStyle}) with the structural silhouette of ${garmentSilhouette} (${garmentTraits}).
-${aestheticContext}
-${collabDetails}
-Primary Materials: ${materialText}.
-Design Fit/Structure: ${fitStyle}.
-Design Approach: ${DESIGN_STYLES[designStyle]}
-${colorPrompt}
-${whiteLabelPrompt} ${refInst}
-
-Style details: Ultra-detailed material textures, photorealistic, 8k resolution, fashion magazine aesthetic, industrial product design, award-winning photography, ${currentLayoutData.ratio} --v 6.0 ${negativePrompt}`;
-
-    setPrompt(basePrompt);
+    const result = buildPrompt({
+      productType, category, brand, coBrand, coBrandCategory: coBrandCat,
+      collabType, collabArtist, collabIP, collabCharacter, customIPText,
+      collabStrength, collabScopes,
+      baseGarment: resolvedBase,
+      materials, fitStyle,
+      components: [designComponent1, designComponent2, designComponent3],
+      selectedAesthetic, selectedPattern, backgroundStyle,
+      colors, colorActive: [c1Active, c2Active, c3Active],
+      whiteLabel, gender, aspectRatio, layoutPos,
+      outputTarget, outputMode, footwear,
+      externalDesignReference, externalFaceReference
+    });
+    setPrompt(result.prompt);
+    setWarnings(result.spec.warnings);
     setCopied(false);
   };
 
@@ -479,7 +395,7 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
         <span className={`absolute text-[9px] font-bold bottom-2 tracking-widest ${backgroundStyle === 'Clean Studio' ? 'text-neutral-500' : 'text-red-400 mix-blend-difference'}`}>MODEL / LIFESTYLE</span>
         <div className={`w-8 h-20 md:h-24 rounded-full flex items-center justify-center ${backgroundStyle === 'Clean Studio' ? 'bg-neutral-300' : 'bg-white/20 border border-white/50 shadow-lg relative'}`}>
           📸
-          {strictFaceMode && <span className="absolute -top-2 -right-2 text-[10px]" title="Strict Face Protection">🔒</span>}
+          {externalFaceReference && <span className="absolute -top-2 -right-2 text-[10px]" title="Strict Face Protection">🔒</span>}
         </div>
       </div>
     );
@@ -537,8 +453,8 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
               <Gamepad2 className="w-6 h-6 text-red-500" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">Fashion Gen <span className="text-red-500">v65</span></h1>
-              <p className="text-neutral-400 text-[11px] md:text-xs font-medium">Single Garment Detail Engine & Strict Cref Focus</p>
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white">Fashion Design Lab <span className="text-red-500">Ultimate</span></h1>
+              <p className="text-neutral-400 text-[11px] md:text-xs font-medium">Canonical Product Design Engine · {catalog.footwear} footwear + {catalog.accessories} accessory silhouettes · Consistency Lock</p>
             </div>
           </div>
           <button onClick={smartRandomize} className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-[0_0_15px_rgba(239,68,68,0.4)] hover:shadow-[0_0_25px_rgba(239,68,68,0.6)]">
@@ -667,6 +583,30 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-3 bg-neutral-900/50 border border-neutral-800 rounded-xl p-3">
+              <label className="text-[10px] font-bold text-neutral-400">
+                COLLAB INFLUENCE
+                <select value={collabStrength} onChange={(e)=>setCollabStrength(Number(e.target.value))}
+                  className="mt-1 w-full bg-neutral-950 border border-neutral-700 rounded-lg p-2 text-white text-xs">
+                  <option value={20}>Subtle · 20%</option>
+                  <option value={40}>Balanced · 40%</option>
+                  <option value={60}>Strong · 60%</option>
+                  <option value={80}>Dominant · 80%</option>
+                </select>
+              </label>
+              <div>
+                <div className="text-[10px] font-bold text-neutral-400 mb-1">COLLAB SCOPE</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {COLLAB_SCOPE_OPTIONS.map(([key,label]) => (
+                    <button key={key} type="button" onClick={()=>toggleCollabScope(key)}
+                      className={`text-[9px] px-2 py-1.5 rounded-lg border transition-all ${collabScopes[key] ? 'bg-red-500/20 border-red-500 text-red-200' : 'bg-neutral-950 border-neutral-800 text-neutral-500'}`}>
+                      {collabScopes[key] ? '✓ ' : ''}{label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             <div className="h-px w-full bg-neutral-800/50"></div>
 
             {/* STEP 2: Base Inspiration */}
@@ -771,12 +711,30 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                 </div>
               </div>
 
+              {productType === 'Footwear' && (
+                <div className="md:col-span-2 space-y-2 bg-orange-500/5 border border-orange-500/20 rounded-xl p-3">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-orange-300">Footwear Anatomy · optional overrides</div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                    {Object.entries(FOOTWEAR_OPTIONS).map(([key,values]) => (
+                      <label key={key} className="text-[9px] uppercase text-neutral-500 font-bold">
+                        {key}
+                        <select value={footwear[key]} onChange={(e)=>updateFootwear(key,e.target.value)}
+                          className="mt-1 w-full bg-neutral-950 border border-neutral-800 text-neutral-200 text-[10px] rounded-lg p-2 normal-case">
+                          {values.map(v=><option key={v} value={v}>{v}</option>)}
+                        </select>
+                      </label>
+                    ))}
+                  </div>
+                  <p className="text-[9px] text-neutral-500">“Preserve silhouette” keeps the selected iconic model authoritative; overrides modify only that anatomical layer.</p>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <label className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
                   <span className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[9px] text-red-500">5</span>
                   Aesthetic & Pattern
                 </label>
-                <select value={selectedAesthetic} onChange={(e) => { setSelectedAesthetic(e.target.value); applyAutoColors(); }}
+                <select value={selectedAesthetic} onChange={(e) => setSelectedAesthetic(e.target.value)}
                   className="w-full bg-indigo-950 border border-indigo-500/50 text-indigo-200 text-xs font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none p-2.5 transition-all duration-200 hover:border-indigo-500">
                   <option value="None (Standard Fashion)">Select Aesthetic: None (Standard)</option>
                   {Object.values(AESTHETIC_THEMES).reduce((acc, aes) => {
@@ -840,7 +798,8 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
 
                 <div className="bg-neutral-900 p-2 rounded-xl border border-neutral-800 flex flex-col gap-2 transition-all duration-200 hover:border-neutral-700">
                   <div className="flex flex-wrap gap-1 bg-neutral-950 p-1 rounded-lg">
-                    <button onClick={() => applyAutoColors()} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-all duration-200 border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">Auto Sync</button>
+                    <button onClick={() => applyAutoColors()} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500 hover:text-white transition-all duration-200 border border-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-500">Brand / Collab</button>
+                    <button onClick={applyAestheticColors} disabled={selectedAesthetic === "None (Standard Fashion)"} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-fuchsia-500/20 text-fuchsia-300 hover:bg-fuchsia-500 hover:text-white transition-all border border-fuchsia-500/30 disabled:opacity-30">Aesthetic</button>
                     <button onClick={applyRandomPalette} className="flex-1 text-[9px] font-bold py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500 hover:text-white transition-all duration-200 border border-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-500">Random</button>
                   </div>
 
@@ -871,48 +830,53 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                 </label>
 
                 <select value={backgroundStyle} onChange={(e) => setBackgroundStyle(e.target.value)}
-                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl p-3 mb-2 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
+                  className="w-full bg-neutral-900 border border-neutral-800 text-white text-xs font-bold rounded-xl p-3 mb-2 focus:ring-2 focus:ring-red-500 focus:outline-none">
                   {Object.keys(BACKGROUND_STYLES).map(bg => <option key={bg} value={bg}>{bg}</option>)}
                 </select>
 
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
-                    className="w-1/2 bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-bold rounded-xl p-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none transition-all duration-200 hover:border-orange-500">
+                    className="bg-orange-500/10 border border-orange-500/30 text-orange-300 text-xs font-bold rounded-xl p-2.5">
                     {Object.keys(ASPECT_RATIOS).map(ar => <option key={ar} value={ar}>{ar.split(' ')[0]}</option>)}
                   </select>
-
-                  {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' && (
+                  <select value={outputMode} onChange={(e)=>setOutputMode(e.target.value)}
+                    className="bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
+                    {OUTPUT_MODES.map(v=><option key={v}>{v}</option>)}
+                  </select>
+                  <select value={outputTarget} onChange={(e)=>setOutputTarget(e.target.value)}
+                    className="bg-neutral-900 border border-neutral-800 text-cyan-300 text-xs rounded-xl p-2.5">
+                    {OUTPUT_TARGETS.map(v=><option key={v}>{v}</option>)}
+                  </select>
+                  {ASPECT_RATIOS[aspectRatio].layoutType === 'triptych' ? (
                     <select value={layoutPos} onChange={(e) => setLayoutPos(e.target.value)}
-                      className="w-1/2 bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
+                      className="bg-neutral-900 border border-neutral-800 text-white text-xs rounded-xl p-2.5">
                       <option value="Left">Model Left</option>
                       <option value="Center">Model Center</option>
                       <option value="Right">Model Right</option>
                     </select>
-                  )}
+                  ) : <div />}
                 </div>
 
-                {productType === 'Apparel' && !ASPECT_RATIOS[aspectRatio].productOnly && (
+                {!ASPECT_RATIOS[aspectRatio].productOnly && (
                   <select value={gender} onChange={(e) => setGender(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 text-red-400 text-xs font-bold rounded-xl p-2.5 mt-2 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 hover:border-neutral-700">
+                    className="w-full bg-neutral-900 border border-neutral-800 text-red-400 text-xs font-bold rounded-xl p-2.5 mt-2">
                     {GENDERS.map(g => <option key={g} value={g}>Model: {g}</option>)}
                   </select>
                 )}
 
-                <div className="flex gap-2 mt-2">
-                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all duration-200 ${
-                    useUploadedDesign ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:border-neutral-700'
-                  } focus-within:ring-2 focus-within:ring-indigo-500`}>
-                    <input type="checkbox" checked={useUploadedDesign} onChange={(e) => setUseUploadedDesign(e.target.checked)} className="sr-only" />
-                    <UploadCloud className="w-3 h-3" /> <span className="text-[9px] font-bold">Sync Image</span>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <label className={`flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border ${externalDesignReference ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`}>
+                    <input type="checkbox" checked={externalDesignReference} onChange={(e) => setExternalDesignReference(e.target.checked)} className="sr-only" />
+                    <UploadCloud className="w-3 h-3" /> <span className="text-[9px] font-bold">External Design Ref</span>
                   </label>
-
-                  <label className={`flex-1 flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border transition-all duration-200 ${
-                    strictFaceMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:border-neutral-700'
-                  } focus-within:ring-2 focus-within:ring-emerald-500`} title="Lock facial identity using --cref">
-                    <input type="checkbox" checked={strictFaceMode} onChange={(e) => setStrictFaceMode(e.target.checked)} className="sr-only" />
-                    <Camera className="w-3 h-3" /> <span className="text-[9px] font-bold">Strict Face (--cref)</span>
+                  <label className={`flex items-center justify-center cursor-pointer gap-2 p-2.5 rounded-xl border ${externalFaceReference ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-neutral-900 border-neutral-800 text-neutral-400'}`}>
+                    <input type="checkbox" checked={externalFaceReference} onChange={(e) => setExternalFaceReference(e.target.checked)} className="sr-only" />
+                    <Camera className="w-3 h-3" /> <span className="text-[9px] font-bold">External Face Ref</span>
                   </label>
                 </div>
+                {(externalDesignReference || externalFaceReference) && (
+                  <p className="text-[9px] text-neutral-500">Reference toggle adds instructions for an image you attach in the downstream generator; this web app does not pretend to upload or bind a reference by itself.</p>
+                )}
               </div>
             </div>
 
@@ -941,6 +905,13 @@ Style details: Ultra-detailed material textures, photorealistic, 8k resolution, 
                   </button>
                 )}
               </div>
+
+              {warnings.length > 0 && (
+                <div className="mb-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-[10px] text-amber-200">
+                  <b className="block mb-1">Compatibility warnings</b>
+                  {warnings.map((w,i)=><div key={i}>• {w}</div>)}
+                </div>
+              )}
 
               {prompt ? (
                 <div className="flex-1 bg-black border border-neutral-800 rounded-2xl p-3 font-mono text-[10px] text-neutral-300 leading-relaxed overflow-y-auto custom-scrollbar shadow-inner relative whitespace-pre-wrap transition-all duration-300 animate-in fade-in">
