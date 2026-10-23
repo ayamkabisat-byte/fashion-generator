@@ -136,3 +136,27 @@ test('External Face Reference prevents Smart Random from choosing product-only d
   const { next } = createSmartRandomState({ ...current, externalFaceReference:true }, locks, constantRng(0.8));
   assert.notEqual(next.aspectRatio, '16:9 (Diptych - Product Only)');
 });
+
+
+test('Layout lock preserves both layout type and triptych model position', () => {
+  const locks = { ...EMPTY_RANDOM_LOCKS, layout:true };
+  const input = {
+    ...current,
+    aspectRatio: '16:9 (Desktop/Landscape)',
+    layoutPos: 'Right'
+  };
+  const { next } = createSmartRandomState(input, locks, constantRng(0.99));
+  assert.equal(next.aspectRatio, input.aspectRatio);
+  assert.equal(next.layoutPos, 'Right');
+});
+
+test('Layout lock preserves a selected diptych layout', () => {
+  const locks = { ...EMPTY_RANDOM_LOCKS, layout:true };
+  const input = {
+    ...current,
+    aspectRatio: '16:9 (Diptych - Product Only)',
+    layoutPos: 'Center'
+  };
+  const { next } = createSmartRandomState(input, locks, constantRng(0.2));
+  assert.equal(next.aspectRatio, '16:9 (Diptych - Product Only)');
+});
