@@ -78,15 +78,7 @@ export function getAestheticProductDNA(aestheticName, productType) {
 
 export function normalizeComponents(components = []) {
   const clean = [...new Set(components.filter(Boolean).filter(x => !String(x).includes('None')))];
-  const warnings = [];
-  const soleSystems = clean.filter(x => /Clear Outsole|Gum Sole|Vibram Sole|Platform \/ Stacked Sole/i.test(x));
-  if (soleSystems.length > 2) {
-    warnings.push('Too many competing sole systems selected; keep no more than two structural sole ideas for a coherent product.');
-  }
-  if (clean.includes('Clear Outsole') && clean.includes('Gum Sole')) {
-    warnings.push('Clear Outsole and Gum Sole are visually competing outsole treatments.');
-  }
-  return { components: clean, warnings };
+  return { components: clean, warnings: [] };
 }
 
 function formatColors(colors = []) {
